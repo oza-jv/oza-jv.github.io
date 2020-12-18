@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>なでしこ３　画像テスト</title>
+</head>
+
+<body>
+<!-- ここに画面レイアウトをあらかじめ作っておく -->
+<div id="div1"></div>
+
+<!-- なでしこ3のエンジンを取り込み -->
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
+<!-- プラグインを取り込み -->
+<script type="text/javascript" src="plugin_media.js"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+// 初期設定 -- HTML内でなでしこを使うときは必ず実行する
+結果領域＝「#div1」。
+結果領域へDOM親要素設定。結果領域に「」をHTML設定。
+
+// ここから，なでしこのプログラムを書いていきます
+Ｐ１＝「kujira.png」。
+Ｐ２＝「lion.gif」。
+
+ID＝Ｐ１を絵追加。
+ボタン１＝「絵を切り換え」のボタン作成。
+ボタン１をクリックした時には
+　　IDにＰ２を絵読込。
+ここまで。
+
+</script>
+</body></html>
