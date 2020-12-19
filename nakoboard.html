@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>なでしこボードの動画</title>
+</head>
+
+<body>
+<!-- ここに画面レイアウトをあらかじめ作っておく -->
+<h1>なでしこボードの動作例</h1>
+<div id="div1"></div>
+
+<!-- なでしこ3のエンジンを取り込み -->
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
+<!-- プラグインを取り込み -->
+<script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+// 初期設定 -- HTML内でなでしこを使うときは必ず実行する
+結果領域＝「#div1」。
+結果領域へDOM親要素設定。結果領域に「」をHTML設定。
+
+// 画面準備
+「■なでしこボードで衝突防止アラーム」と書く。
+「<a href="https://oza-jv.github.io/board4.nako">サンプルプログラム</a>」と書く。
+「./img/nadesiko-board-1s.png」を絵追加。改行作成。
+ＩＤ１＝「./mov/nadesiko-board-ss.mp4」を動画追加。改行作成。
+ボタン１＝「再生」のボタン作成。改行作成。
+改行作成。
+
+「■なでしこボードでモータドライブ制御」と書く。
+「<a href="https://oza-jv.github.io/board5.nako">サンプルプログラム</a>」と書く。
+「./img/nadesiko-board-2s.png」を絵追加。改行作成。
+ＩＤ２＝「./mov/nadesiko-board-ex-ss.mp4」を動画追加。改行作成。
+ボタン２＝「再生」のボタン作成。改行作成。
+
+
+ボタン１をクリックした時には
+　　ＩＤ１の動画音オン。
+　　ＩＤ１を動画再生。
+ここまで。
+
+
+ボタン２をクリックした時には
+　　ＩＤ２の動画音オン。
+　　ＩＤ２を動画再生。
+ここまで。
+
+</script>
+</body></html>
