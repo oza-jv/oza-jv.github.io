@@ -179,6 +179,8 @@ const PluginMedia = {
 	      video.width = '320';
 	      video.controls = false;
 	      video.playsinline = true;
+	      video.autoplay = true;
+	      video.muted = true;
 	      parent.appendChild(video);
 	      sys.__v0['DOM生成個数']++;
 	      return video.id;
@@ -213,7 +215,6 @@ const PluginMedia = {
       try {
         const video = document.querySelector("#" + aID);
         video.pause();
-//        video.currentTime = 0;
       } catch(e) {
         // エラーを表示
         window.alert('動画停止 ' + e.message);
