@@ -200,7 +200,6 @@ const PluginMedia = {
       try {
         const video = document.querySelector("#" + aID);
         video.currentTime = 0;
-        video.muted=false;
         video.play();
       } catch(e) {
         // エラーを表示
