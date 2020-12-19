@@ -1,5 +1,5 @@
 /**
- * なでしこ3 追加プラグイン 2020/12/12
+ * なでしこ3 追加プラグイン 2020/12/19  v1.2
  * file : plugin_media.js
  * 音声，静止画，動画を表示・再生するためのプラグイン
  * ローカルのファイルも扱える
@@ -8,7 +8,7 @@
  */
 const PluginMedia = {
   // --- 画像関係 ---
-  '絵追加': { // @imgタグを追加して，aPicファイルを読み込む。 //@エツイカ
+  '絵追加': { // @img要素を追加して，aPicファイルを読み込む。 //@エツイカ
     // pIDを指定するとそれを親要素とする。省略するとdefault親要素の子要素として追加。
     // 生成されたid名を返す。
     type: 'func',
@@ -17,21 +17,21 @@ const PluginMedia = {
     return_none: true,
     fn: function (aPic, ...pID) {
       try {
-         const sys = pID.pop();
-         var parent = sys.__v0['DOM親要素'];
-         if ( pID.length > 0 ) {
-           parent = document.querySelector("#" + pID[0]);
-         };
-         const img = document.createElement('img');
-         img.src = aPic;
-         img.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
-         parent.appendChild(img);
-         sys.__v0['DOM生成個数']++;
-         return img.id;
+        const sys = pID.pop();
+        var parent = sys.__v0['DOM親要素'];
+        if ( pID.length > 0 ) {
+          parent = document.querySelector("#" + pID[0]);
+        };
+        const img = document.createElement('img');
+        img.src = aPic;
+        img.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
+        parent.appendChild(img);
+        sys.__v0['DOM生成個数']++;
+        return img.id;
      } catch(e) {
-		// エラーを表示
-       window.alert('絵追加 ' + e.message);
-       return -1;
+        // エラーを表示
+        window.alert('絵追加 ' + e.message);
+        return -1;
      }
     }
   },
@@ -44,16 +44,16 @@ const PluginMedia = {
         const parent = document.querySelector("#" + aID);
         parent.src = aPic;
       } catch(e) {
-		// エラーを表示
-       window.alert('絵読込 ' + e.message);
-       return -1;
+        // エラーを表示
+        window.alert('絵読込 ' + e.message);
+        return -1;
       }
     }
   },
   
   // --- 音関係 ---
-  '音読込': { // @id=aIDのaudioタグにaSrcファイルを読み込む // @オトヨミコミ
-    // あらかじめaudioタグを設置しておく場合はこっち。
+  '音読込': { // @id=aIDのaudio要素にaSrcファイルを読み込む // @オトヨミコミ
+    // あらかじめaudio要素を設置しておく場合はこっち。
     type: 'func',
     josi: [['に'],['を']],
     fn: function (aID, aSrc, sys) {
@@ -61,14 +61,14 @@ const PluginMedia = {
         const audio = document.querySelector("#" + aID);
         audio.src = aSrc;
       } catch(e) {
-       // エラーを表示
-       window.alert('音読込 ' + e.message);
-       return -1;
+        // エラーを表示
+        window.alert('音読込 ' + e.message);
+        return -1;
       }
     }
   },
   
-  '音追加': { // @audioタグを追加して，aSrcファイルを読み込む // @オトツイカ
+  '音追加': { // @audio要素を追加して，aSrcファイルを読み込む // @オトツイカ
     // aIDを指定するとそれを親要素とする。省略するとbodyの子要素として追加。
     // 生成されたid名を返します。
     type: 'func',
@@ -77,26 +77,26 @@ const PluginMedia = {
     return_none: true,
     fn: function (aSrc, ...pID) {
       try {
-         const sys = pID.pop();
-         var parent = document.body;
-         if ( pID.length > 0 ) {
-           parent = document.querySelector("#" + pID[0]);
-         };
-         const audio = document.createElement('audio');
-         audio.src = aSrc;
-         audio.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
-         parent.appendChild(audio);
-         sys.__v0['DOM生成個数']++;
-         return audio.id;
+        const sys = pID.pop();
+        var parent = document.body;
+        if ( pID.length > 0 ) {
+          parent = document.querySelector("#" + pID[0]);
+        };
+        const audio = document.createElement('audio');
+        audio.src = aSrc;
+        audio.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
+        parent.appendChild(audio);
+        sys.__v0['DOM生成個数']++;
+        return audio.id;
      } catch(e) {
-		// エラーを表示
-       window.alert('音追加 ' + e.message);
-       return -1;
+        // エラーを表示
+        window.alert('音追加 ' + e.message);
+        return -1;
      }
     }
   },
     
-  '音再生': { // @id=aIDのaudioタグに設定されている音を頭から再生する // @オトサイセイ
+  '音再生': { // @id=aIDのaudio要素に設定されている音を頭から再生する // @オトサイセイ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -112,7 +112,7 @@ const PluginMedia = {
     }
   },
 
-  '音再開': { // @id=aIDのaudioタグに設定されている音を停止位置から再生する // @オトサイカイ
+  '音再開': { // @id=aIDのaudio要素に設定されている音を停止位置から再生する // @オトサイカイ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -127,7 +127,7 @@ const PluginMedia = {
     }
   },
 
-  '音停止': { // @id=aIDのaudioタグに設定されている音を一時停止する // @オトテイシ
+  '音停止': { // @id=aIDのaudio要素に設定されている音を一時停止する // @オトテイシ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -143,13 +143,15 @@ const PluginMedia = {
   },
   
   // --- 動画関係 ---
-  '動画読込': { // @id=aIDのvideoタグにaSrcファイルを読み込む // @ドウガヨミコミ
-    // あらかじめvideoタグを設置しておく場合はこっち。
+  '動画読込': { // @id=aIDのvideo要素にaSrcファイルを読み込む // @ドウガヨミコミ
+    // あらかじめvideo要素を設置しておく場合はこっち。
     type: 'func',
     josi: [['に'],['を']],
     fn: function (aID, aSrc, sys) {
       try {
         const video = document.querySelector("#" + aID);
+        video.playsinline = true;
+        video.muted = true;    // chromeではmutedがtrueでないと再生できない
         video.src = aSrc;
       } catch(e) {
         // エラーを表示
@@ -159,7 +161,7 @@ const PluginMedia = {
     }
   },
 
-  '動画追加': { // @videoタグを追加して，aSrcファイルを読み込む // @ドウガツイカ
+  '動画追加': { // @video要素を追加して，aSrcファイルを読み込む // @ドウガツイカ
     // aIDを指定するとそれを親要素とする。省略するとdefault親要素の子要素として追加。
     // 生成されたid名を返す。
     type: 'func',
@@ -179,8 +181,7 @@ const PluginMedia = {
         video.width = '320';
         video.controls = false;
         video.playsinline = true;
-        video.autoplay = true;
-        video.muted = true;    // chromeではmutedがtrueでないと再生できない
+        video.muted = true;     // chromeではmutedがtrueでないと再生できない
         parent.appendChild(video);
         sys.__v0['DOM生成個数']++;
         return video.id;
@@ -192,7 +193,7 @@ const PluginMedia = {
     }
   },
 
-  '動画再生': { // @id=aIDのvideoタグに設定されている動画を頭から再生する // @ドウガサイセイ
+  '動画再生': { // @id=aIDのvideo要素に設定されている動画を頭から再生する // @ドウガサイセイ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -200,7 +201,6 @@ const PluginMedia = {
         const video = document.querySelector("#" + aID);
         video.currentTime = 0;
         video.play();
-        //video.muted = false;
       } catch(e) {
         // エラーを表示
         window.alert('動画再生 ' + e.message);
@@ -209,7 +209,7 @@ const PluginMedia = {
     }
   },
   
-  '動画停止': { // @id=aIDのvideoタグに設定されている動画を一時停止する // @ドウガテイシ
+  '動画停止': { // @id=aIDのvideo要素に設定されている動画を一時停止する // @ドウガテイシ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -224,7 +224,7 @@ const PluginMedia = {
     }
   },
 
-  '動画再開': { // @id=aIDのvideoタグに設定されている動画を停止位置から再生する // @ドウガサイカイ
+  '動画再開': { // @id=aIDのvideo要素に設定されている動画を停止位置から再生する // @ドウガサイカイ
     type: 'func',
     josi: [['を']],
     fn: function (aID, sys) {
@@ -239,6 +239,25 @@ const PluginMedia = {
     }
   },
   
+  '動画音オン': {
+    type: 'func',
+    josi: [['の']],
+    fn: function (aID, sys) {
+      const video = document.querySelector("#" + aID);
+      video.muted = false;
+    }
+  },
+
+  '動画音オフ': {
+    type: 'func',
+    josi: [['の']],
+    fn: function (aID, sys) {
+      const video = document.querySelector("#" + aID);
+      video.muted = true;
+    }
+  },
+
+   
   // --- 文字関係 ---
   '書': {
     type: 'func',
