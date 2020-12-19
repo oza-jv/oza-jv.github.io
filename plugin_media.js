@@ -17,22 +17,22 @@ const PluginMedia = {
     return_none: true,
     fn: function (aPic, ...pID) {
       try {
-	      const sys = pID.pop();
-	      var parent = sys.__v0['DOM親要素'];
-	      if ( pID.length > 0 ) {
-	        parent = document.querySelector("#" + pID[0]);
-	      };
-	      const img = document.createElement('img');
-	      img.src = aPic;
-	      img.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
-	      parent.appendChild(img);
-	      sys.__v0['DOM生成個数']++;
-	      return img.id;
-	  } catch(e) {
+         const sys = pID.pop();
+         var parent = sys.__v0['DOM親要素'];
+         if ( pID.length > 0 ) {
+           parent = document.querySelector("#" + pID[0]);
+         };
+         const img = document.createElement('img');
+         img.src = aPic;
+         img.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
+         parent.appendChild(img);
+         sys.__v0['DOM生成個数']++;
+         return img.id;
+     } catch(e) {
 		// エラーを表示
-	    window.alert('絵追加 ' + e.message);
-	    return -1;
-	  }
+       window.alert('絵追加 ' + e.message);
+       return -1;
+     }
     }
   },
 
@@ -45,8 +45,8 @@ const PluginMedia = {
         parent.src = aPic;
       } catch(e) {
 		// エラーを表示
-	    window.alert('絵読込 ' + e.message);
-	    return -1;
+       window.alert('絵読込 ' + e.message);
+       return -1;
       }
     }
   },
@@ -61,9 +61,9 @@ const PluginMedia = {
         const audio = document.querySelector("#" + aID);
         audio.src = aSrc;
       } catch(e) {
-	    // エラーを表示
-	    window.alert('音読込 ' + e.message);
-	    return -1;
+       // エラーを表示
+       window.alert('音読込 ' + e.message);
+       return -1;
       }
     }
   },
@@ -77,22 +77,22 @@ const PluginMedia = {
     return_none: true,
     fn: function (aSrc, ...pID) {
       try {
-	      const sys = pID.pop();
-	      var parent = document.body;
-	      if ( pID.length > 0 ) {
-	        parent = document.querySelector("#" + pID[0]);
-	      };
-	      const audio = document.createElement('audio');
-	      audio.src = aSrc;
-	      audio.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
-	      parent.appendChild(audio);
-	      sys.__v0['DOM生成個数']++;
-	      return audio.id;
-	  } catch(e) {
+         const sys = pID.pop();
+         var parent = document.body;
+         if ( pID.length > 0 ) {
+           parent = document.querySelector("#" + pID[0]);
+         };
+         const audio = document.createElement('audio');
+         audio.src = aSrc;
+         audio.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
+         parent.appendChild(audio);
+         sys.__v0['DOM生成個数']++;
+         return audio.id;
+     } catch(e) {
 		// エラーを表示
-	    window.alert('音追加 ' + e.message);
-	    return -1;
-	  }
+       window.alert('音追加 ' + e.message);
+       return -1;
+     }
     }
   },
     
@@ -152,9 +152,9 @@ const PluginMedia = {
         const video = document.querySelector("#" + aID);
         video.src = aSrc;
       } catch(e) {
-	    // エラーを表示
-	    window.alert('動画読込 ' + e.message);
-	    return -1;
+        // エラーを表示
+        window.alert('動画読込 ' + e.message);
+        return -1;
       }
     }
   },
@@ -168,27 +168,27 @@ const PluginMedia = {
     return_none: true,
     fn: function (aSrc, ...pID) {
       try {
-	      const sys = pID.pop();
-	      var parent = sys.__v0['DOM親要素'];
-	      if ( pID.length > 0 ) {
-	        parent = document.querySelector("#" + pID[0]);
-	      };
-	      const video = document.createElement('video');
-	      video.src = aSrc;
-	      video.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
-	      video.width = '320';
-	      video.controls = false;
-	      video.playsinline = true;
-	      video.autoplay = true;
-	      video.muted = true;		// chromeではautoplayとmutedがtrueでないと再生できない
-	      parent.appendChild(video);
-	      sys.__v0['DOM生成個数']++;
-	      return video.id;
-	  } catch(e) {
-		// エラーを表示
-	    window.alert('動画追加 ' + e.message);
-	    return -1;
-	  }
+        const sys = pID.pop();
+        var parent = sys.__v0['DOM親要素'];
+        if ( pID.length > 0 ) {
+          parent = document.querySelector("#" + pID[0]);
+        };
+        const video = document.createElement('video');
+        video.src = aSrc;
+        video.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
+        video.width = '320';
+        video.controls = false;
+        video.playsinline = true;
+        video.autoplay = true;
+        video.muted = true;    // chromeではmutedがtrueでないと再生できない
+        parent.appendChild(video);
+        sys.__v0['DOM生成個数']++;
+        return video.id;
+     } catch(e) {
+        // エラーを表示
+        window.alert('動画追加 ' + e.message);
+        return -1;
+     }
     }
   },
 
@@ -199,8 +199,8 @@ const PluginMedia = {
       try {
         const video = document.querySelector("#" + aID);
         video.currentTime = 0;
-        video.muted = false;
         video.play();
+        //video.muted = false;
       } catch(e) {
         // エラーを表示
         window.alert('動画再生 ' + e.message);
