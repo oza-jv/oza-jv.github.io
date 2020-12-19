@@ -150,7 +150,7 @@ const PluginMedia = {
     fn: function (aID, aSrc, sys) {
       try {
         const video = document.querySelector("#" + aID);
-        video.setAttribute('playsinline', '');
+        video.playsinline = true;
         video.muted = true;    // chromeではmutedがtrueでないと再生できない
         video.src = aSrc;
       } catch(e) {
@@ -180,7 +180,7 @@ const PluginMedia = {
         video.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
         video.width = '320';
         video.controls = false;
-        video.setAttribute('playsinline', '');
+        video.playsinline = true;
         video.muted = true;     // chromeではmutedがtrueでないと再生できない
         parent.appendChild(video);
         sys.__v0['DOM生成個数']++;
