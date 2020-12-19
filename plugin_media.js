@@ -180,7 +180,7 @@ const PluginMedia = {
 	      video.controls = false;
 	      video.playsinline = true;
 	      video.autoplay = true;
-	      video.muted = true;
+	      video.muted = true;		// chromeではautoplayとmutedがtrueでないと再生できない
 	      parent.appendChild(video);
 	      sys.__v0['DOM生成個数']++;
 	      return video.id;
@@ -199,6 +199,7 @@ const PluginMedia = {
       try {
         const video = document.querySelector("#" + aID);
         video.currentTime = 0;
+        video.muted = false;
         video.play();
       } catch(e) {
         // エラーを表示
