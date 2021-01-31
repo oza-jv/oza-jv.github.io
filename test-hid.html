@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="origin-trial" content="Aub/6OTHZFpvguBQTsDcFO6xK5t8xENiohlvILkF7nvErPs1DJFU/wx1yRy/gaHjhay8iwqtZoyaERtxpOiS+AMAAABjeyJvcmlnaW4iOiJodHRwczovL296YS1qdi5naXRodWIuaW86NDQzIiwiZmVhdHVyZSI6IldlYkhJRCIsImV4cGlyeSI6MTYxNDEyNDc5OSwiaXNTdWJkb21haW4iOnRydWV9">
+  <title>なでしこ３</title>
+</head>
+
+<body>
+<!-- ここに画面レイアウトをあらかじめ作っておく -->
+<div id="div1"></div>
+<audio id="audio1"></audio>
+<video id="video1" width="320"></video>
+<img id="img1" width="160"></img>
+<input type="button" value="ボタン">
+
+<!-- なでしこ3のエンジンを取り込み -->
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
+<!-- プラグインを取り込み -->
+<script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+// 初期設定 -- HTML内でなでしこを使うときは必ず実行する
+結果領域＝「#div1」。
+結果領域へDOM親要素設定。結果領域に「」をHTML設定。
+
+// ここから，なでしこのプログラムを書いていきます
+
+
+
+</script>
+
+<script type="text/javascript">
+// 
+const filters = [
+  {
+    vendorID: 0x3289,
+    productID: 0x2001
+  }
+];
+
+const main = async () => {
+    const [device] = await navigator.hid.requestDevice({ filters });
+};
+
+  if("hid" in navigator) {
+    console.log('HID OK');
+    const btn = document.querySelector('button');
+    btn.addEventListener('click', main);
+  } else {
+    console.log('HID NG');
+  }
+</script>
+</body></html>
+
