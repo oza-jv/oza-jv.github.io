@@ -226,34 +226,24 @@
 				if (!f) return;
 				var fname = f;
 				
-				fetch( fname )
-					.then((data) => {
-						if (data.ok) {
-							return data.text();
-						} else {
-							return Promise.reject(new Error('読み込み失敗'));
-						}
-					})
-					.then((text) => {
-						editor.setValue( text, 1 );
-					})
-					.catch(e => {
-						nako3_print(e);
-					});
-				
-				/*
 				const c = confirm( f + "を読み込んでいいですか？");
 				if (c) {
 					//nako3_clear(1);
-					const reader = new FileReader();
-
-					reader.addEventListener('load', (event) => {
-						editor.setValue( event.target.result, 1 );
-						nako3_print( "読み込みました");
-					});
-					reader.readAsText(f);
+					fetch( fname )
+						.then((data) => {
+							if (data.ok) {
+								return data.text();
+							} else {
+								return Promise.reject(new Error('読み込み失敗'));
+							}
+						})
+						.then((text) => {
+							editor.setValue( text, 1 );
+						})
+						.catch(e => {
+							nako3_print(e);
+						});
 				}
-				*/
 			} catch(e) {
 				nako3_print(e);
 			}
