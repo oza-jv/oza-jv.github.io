@@ -35,11 +35,19 @@
 			<button onclick="nako3_savels(1)">LSに保存</button>
 			<button onclick="nako3_loadls()">LSから読込</button>
 			<button onclick="nako3_clearls(1)">LSをクリア</button>
-			
+		</div>
+		<div>
 			<input type="file" id="nako3_file" accept=".txt"/>
 			<button onclick="nako3_loadfile()">ファイルから読込</button>
 		</div>
-		<br />
+		<div>
+			<select id="nako3_sample">
+				<option value="">お手本を選ぶ</option>
+				<option value="sample-movie.txt">動画の使い方</option>
+				<option value="kazuate.txt">数当てゲーム</option>
+			</select>
+			<button onclick="nako3_loadsample()">お手本を読み込む</button>
+		</div>
 		<div id="editor" style="height: 600px; border:2px solid black"></div>
 
 		<!-- ace.js editor -->
@@ -189,24 +197,56 @@
 		}
 
 		// load and save to file
-		const reader = new FileReader();
-		reader.onLoad = () => {
-			editor.setValue( reader.result, 1 );
-			nako3_print( "読み込みました");
-		};
-
 		const nako3_loadfile= function () {
 			try {
 				// file select
 				const f = document.getElementById("nako3_file").files[0];
 				if (!f) return;
-				nako3_print(f.name);
 
 				const c = confirm( f.name + "を読み込んでいいですか？");
 				if (c) {
 					//nako3_clear(1);
+					const reader = new FileReader();
+
+					reader.addEventListener('load', (event) => {
+						editor.setValue( event.target.result, 1 );
+						nako3_print( "読み込みました");
+					});
 					reader.readAsText(f);
 				}
+			} catch(e) {
+				nako3_print(e);
+			}
+		}
+
+		const nako3_loadsample= function () {
+			try {
+				// file select
+				const f = document.getElementById("nako3_sample").value;
+				if (!f) return;
+				
+				var fname = f;
+				nako3_print(fname);
+				
+				fetch( fname )
+					.then((data) => data.text())
+					.then((text) => {
+						editor.setValue( text, 1 );
+					});
+				
+				/*
+				const c = confirm( f + "を読み込んでいいですか？");
+				if (c) {
+					//nako3_clear(1);
+					const reader = new FileReader();
+
+					reader.addEventListener('load', (event) => {
+						editor.setValue( event.target.result, 1 );
+						nako3_print( "読み込みました");
+					});
+					reader.readAsText(f);
+				}
+				*/
 			} catch(e) {
 				nako3_print(e);
 			}
