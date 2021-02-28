@@ -12,7 +12,7 @@
 <audio id="audio1"></audio>
 <video id="video1" width="320"></video>
 <img id="img1" width="160"></img>
-<input type="button" value="ボタン">
+<button>ボタン</button>
 
 <!-- なでしこ3のエンジンを取り込み -->
 <script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
@@ -35,22 +35,63 @@
 // 
 const filters = [
   {
-    vendorID: 0x3289,
-    productID: 0x2001
+    vendorId: 0x3289,
+    productId: 0x2001
   }
 ];
 
 const main = async () => {
     const [device] = await navigator.hid.requestDevice({ filters });
+
+    for (let collection of device.collections) {
+        // A HID collection includes usage, usage page, reports, and subcollections.
+        console.log(`Usage: ${collection.usage}`);
+        console.log(`Usage page: ${collection.usagePage}`);
+      
+        for (let inputReport of collection.inputReports) {
+          console.log(`Input report: ${inputReport.reportId}`);
+          // Loop through inputReport.items
+        }
+      
+        for (let outputReport of collection.outputReports) {
+          console.log(`Output report: ${outputReport.reportId}`);
+          // Loop through outputReport.items
+        }
+      
+        for (let featureReport of collection.featureReports) {
+          console.log(`Feature report: ${featureReport.reportId}`);
+          // Loop through featureReport.items
+        }
+      
+        // Loop through subcollections with collection.children
+    }
+    
+    device.addEventListener("inputreport", event => {
+        const { data, device, reportId } = event;
+      
+        console.log(data);
+        console.log(reportId);
+    });
+
+    await device.open();
+    const OutBuffer = new ArrayBuffer(64);
+	OutBuffer[0] = 0;
+	OutBuffer[1] = 'P';
+	OutBuffer[2] = 1;
+    await device.sendReport(0x00, new Uint8Array(OutBuffer));
+
+	console.log(device.collections);
+	
+	//await device.close();
 };
 
-  if("hid" in navigator) {
+if("hid" in navigator) {
     console.log('HID OK');
     const btn = document.querySelector('button');
     btn.addEventListener('click', main);
-  } else {
+} else {
     console.log('HID NG');
-  }
+}
 </script>
 </body></html>
 

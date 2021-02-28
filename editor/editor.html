@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>なでしこ３</title>
+</head>
+
+<body>
+<!-- なでしこ3のエンジンを取り込み -->
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
+<!-- プラグインを取り込み -->
+<script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
+<script type="text/javascript" src="plugin_hyouji.js"></script>
+<!-- 独自スタイル定義 -->
+<style>
+.nako3result {
+  background-color: #f0fff0; padding:8px;
+  fontsize: 18px;
+  line-height: 1.1em;
+}
+.nako3error {
+  background-color: #fff0f0; padding:8px; color: #904040;
+  font-size:1em; border:1px solid #a0a0ff; margin:4px;
+}
+</style>
+<div class="wrapper" style="display: flex;">
+  <section class="main" style="width: 40%; padding: 0px 20px">
+    <h2>なでしこでプログラムをつくろう！</h2>
+    <div>
+      <button onclick="nako3_run(1,1)">▶ 実行</button>
+    </div>
+    <br />
+    <div id="editor" style="height: 600px; border:2px solid black"></div>
+
+    <!-- ERROR -->
+    <div id="nako3_error" class="nako3error" style="display: none"></div>
+
+    <!-- ace.js editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script>
+      // ace.js init
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/clouds");
+      editor.setFontSize(18);
+      editor.getSession().setMode("ace/mode/text");
+      editor.getSession().setUseWrapMode(true);
+      editor.getSession().setTabSize(2);
+      editor.setValue("「こんにちは」と表示。\n", 2);
+      
+      
+      // nadesiko init
+      function nako3_run(id, use_canvas) {
+		  if (typeof(navigator.nako3) === 'undefined' || editor === undefined) {
+		    alert('現在ライブラリを読み込み中です。しばらくお待ちください。')
+		    return
+		  }
+		  const code = editor.getValue()
+		  var div_name = "#nako3_result"
+		  var addon =
+		    "「" + div_name + "」へDOM親要素設定;" +
+		    "「" + div_name + "」に「」をHTML設定;"
+		  const preCode = addon + "\n"
+		  try {
+		    nako3_clear()
+		    navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
+		    console.log("DONE")
+		  } catch (e) {
+		    nako3_print("==ERROR==" + e.message + "")
+		    //editor.editorMarkers.addByError(code, e)
+		    console.log(e)
+		  }
+	  }
+
+	  const nako3_print = function (s) {
+		  console.log("[表示] " + s)
+		  var result = document.getElementById("nako3_result")
+		  if (!result) return
+		  s = "" + s // 文字列に変換
+		  // エラーだった場合
+		  if (s.substr(0, 9) == "==ERROR==") {
+		    s = s.substr(9)
+		    var err = document.getElementById("nako3_error")
+		    err.innerHTML = s
+		    err.style.display = 'block'
+		    return
+		  } else {
+		    result.innerHTML += to_html(s) + "\n"
+		    result.style.display = 'block'
+		  }
+		}
+
+		function to_html(s) {
+		  s = '' + s
+		  return s.replace(/\&/g, '&amp;')
+		          .replace(/\</g, '&lt;')
+		          .replace(/\>/g, '&gt;')
+		}
+		
+		const nako3_clear = function (s, use_canvas) {
+		  var result = document.getElementById("nako3_result")
+		  if (!result) return
+		  result.innerHTML = ''
+		  //result.style.display = 'none'
+		  var err = document.getElementById("nako3_error")
+		  err.innerHTML = ''
+		  err.style.display = 'none'
+		}
+    </script>
+  </section>
+  
+  <section class="sub" style="width: 60%; padding: 0px 20px">
+    <h1>実行結果</h1>
+    <div id="nako3_result" class="nako3result"></div>
+    <audio id="audio1"></audio>
+    <video id="video1" width="320"></video>
+    <img id="img1" width="160"></img>
+  </section>
+</div>
+<body></html>
+
+
