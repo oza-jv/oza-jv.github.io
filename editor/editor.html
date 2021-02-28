@@ -44,7 +44,7 @@
 			<select id="nako3_sample">
 				<option value="">お手本を選ぶ</option>
 				<option value="sample-movie.txt">動画の使い方</option>
-				<option value="kazuate.txt">数当てゲーム</option>
+				<option value="sample-kazuate.txt">数当てゲーム</option>
 			</select>
 			<button onclick="nako3_loadsample()">お手本を読み込む</button>
 		</div>
@@ -224,14 +224,21 @@
 				// file select
 				const f = document.getElementById("nako3_sample").value;
 				if (!f) return;
-				
 				var fname = f;
-				nako3_print(fname);
 				
-				fetch( fname )
-					.then((data) => data.text())
+				await fetch( fname )
+					.then((data) => {
+						if (data.ok) {
+							return data.text();
+						} else {
+							return Promise.reject(new Error('読み込み失敗'));
+						}
+					})
 					.then((text) => {
 						editor.setValue( text, 1 );
+					})
+					.catch(e => {
+						nako3_print(e);
 					});
 				
 				/*
