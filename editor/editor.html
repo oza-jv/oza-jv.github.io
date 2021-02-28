@@ -31,15 +31,24 @@
 	<section class="main" style="width: 50%; padding: 0px 20px">
 		<h3>なでしこでプログラムをつくろう！</h3>
 		<div>
-			<button onclick="nako3_run()">▶ 実行</button>
+			プログラムを入力したら、<button onclick="nako3_run()">▶ 実行</button> しよう！
+		</div>
+		<hr />
+		<!-- ace.js editor -->
+		<div id="editor" style="height: 480px; border:2px solid black"></div>
+		<hr />
+		<div>
 			<button onclick="nako3_savels(1)">LSに保存</button>
 			<button onclick="nako3_loadls()">LSから読込</button>
 			<button onclick="nako3_clearls(1)">LSをクリア</button>
 		</div>
+		<hr />
 		<div>
 			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
-			<button onclick="nako3_loadfile()">←選んだファイルを読込</button>
+			<button onclick="nako3_loadfile()">←選んだファイルを読み込む</button>
 		</div>
+		<!-- sample -->
+		<hr />
 		<div>
 			<select id="nako3_sample">
 				<option value="">お手本を選ぶ</option>
@@ -49,7 +58,6 @@
 			</select>
 			<button onclick="nako3_loadsample()">←選んだお手本を読み込む</button>
 		</div>
-		<div id="editor" style="height: 600px; border:2px solid black"></div>
 
 		<!-- ace.js editor -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -59,9 +67,9 @@
 			// ace.js init
 			var editor = ace.edit("editor");
 			editor.setTheme("ace/theme/clouds");
-			editor.setFontSize(16);
+			editor.setFontSize(14);
 			editor.getSession().setMode("ace/mode/text");
-			editor.getSession().setUseWrapMode(true);
+			editor.getSession().setUseWrapMode(false);
 			editor.getSession().setTabSize(2);
 			var defs = "「kujira.png」を絵追加。\n";
 			defs += "「こんにちは、クジラです。」と話す。\n";
@@ -256,16 +264,17 @@
 	</section>
 	
 	<section class="sub" style="width: 50%; padding: 0px 20px">
-		<h3>実行結果</h3>
+		<h3>■実行結果</h3>
+		<button onclick="nako3_clear(1);">結果を消す</button><hr />
 		<!-- ERROR -->
 		<div id="nako3_error" class="nako3error" style="display: none"></div>
 
 		<!-- INFO -->
 		<div id="nako3_info" class="nako3info" style="display: none"></div>
 
-	<!!-- RESULT -->
-	<audio id="audio1"></audio>
-	<div id="nako3_result" class="nako3result" style="display: none"></div>
+		<!!-- RESULT -->
+		<audio id="audio1"></audio>
+		<div id="nako3_result" class="nako3result" style="display: none"></div>
 	</section>
 </div>
 <body></html>
