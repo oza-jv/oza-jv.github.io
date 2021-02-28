@@ -38,7 +38,7 @@
 		</div>
 		<div>
 			<input type="file" id="nako3_file" accept=".txt"/>
-			<button onclick="nako3_loadfile()">ファイルから読込</button>
+			<button onclick="nako3_loadfile()">←選んだファイルを読込</button>
 		</div>
 		<div>
 			<select id="nako3_sample">
@@ -47,7 +47,7 @@
 				<option value="sample-kazuate.txt">数当てゲーム</option>
 				<option value="dummy.txt">ダミー</option>
 			</select>
-			<button onclick="nako3_loadsample()">お手本を読み込む</button>
+			<button onclick="nako3_loadsample()">←選んだお手本を読み込む</button>
 		</div>
 		<div id="editor" style="height: 600px; border:2px solid black"></div>
 
@@ -204,14 +204,14 @@
 				const f = document.getElementById("nako3_file").files[0];
 				if (!f) return;
 
-				const c = confirm( f.name + "を読み込んでいいですか？");
+				const c = confirm( f.name + " を読み込んでいいですか？");
 				if (c) {
 					//nako3_clear(1);
 					const reader = new FileReader();
 
 					reader.addEventListener('load', (event) => {
 						editor.setValue( event.target.result, 1 );
-						nako3_print( "読み込みました");
+						nako3_print( f.name + " を読み込みました");
 					});
 					reader.readAsText(f);
 				}
@@ -225,12 +225,11 @@
 				// file select
 				const f = document.getElementById("nako3_sample").value;
 				if (!f) return;
-				var fname = f;
 				
-				const c = confirm( f + "を読み込んでいいですか？");
+				const c = confirm( f + " を読み込んでいいですか？");
 				if (c) {
 					//nako3_clear(1);
-					fetch( fname )
+					fetch( f )
 						.then((data) => {
 							if (data.ok) {
 								return data.text();
@@ -240,6 +239,7 @@
 						})
 						.then((text) => {
 							editor.setValue( text, 1 );
+							nako3_print( f + " を読み込みました");
 						})
 						.catch(e => {
 							nako3_print(e);
