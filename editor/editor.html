@@ -226,7 +226,7 @@
 				if (!f) return;
 				var fname = f;
 				
-				await fetch( fname )
+				fetch( fname )
 					.then((data) => {
 						if (data.ok) {
 							return data.text();
