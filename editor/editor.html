@@ -37,7 +37,7 @@
 			<button onclick="nako3_clearls(1)">LSをクリア</button>
 		</div>
 		<div>
-			<input type="file" id="nako3_file" accept=".txt"/>
+			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
 			<button onclick="nako3_loadfile()">←選んだファイルを読込</button>
 		</div>
 		<div>
@@ -211,6 +211,7 @@
 
 					reader.addEventListener('load', (event) => {
 						editor.setValue( event.target.result, 1 );
+						nako3_clear(0);
 						nako3_print( f.name + " を読み込みました");
 					});
 					reader.readAsText(f);
@@ -239,6 +240,7 @@
 						})
 						.then((text) => {
 							editor.setValue( text, 1 );
+							nako3_clear(0);
 							nako3_print( f + " を読み込みました");
 						})
 						.catch(e => {
