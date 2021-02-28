@@ -32,9 +32,6 @@
     <br />
     <div id="editor" style="height: 600px; border:2px solid black"></div>
 
-    <!-- ERROR -->
-    <div id="nako3_error" class="nako3error" style="display: none"></div>
-
     <!-- ace.js editor -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
     <script>
@@ -46,7 +43,6 @@
       editor.getSession().setUseWrapMode(true);
       editor.getSession().setTabSize(2);
       editor.setValue("「こんにちは」と表示。\n", 1);
-      
       
       // nadesiko init
       function nako3_run(id, use_canvas) {
@@ -82,6 +78,7 @@
 		    var err = document.getElementById("nako3_error")
 		    err.innerHTML = s
 		    err.style.display = 'block'
+		    result.style.display = 'none'
 		    return
 		  } else {
 		    result.innerHTML += to_html(s) + "\n"
@@ -100,7 +97,7 @@
 		  var result = document.getElementById("nako3_result")
 		  if (!result) return
 		  result.innerHTML = ''
-		  //result.style.display = 'none'
+		  result.style.display = 'block'
 		  var err = document.getElementById("nako3_error")
 		  err.innerHTML = ''
 		  err.style.display = 'none'
@@ -110,7 +107,11 @@
   
   <section class="sub" style="width: 50%; padding: 0px 20px">
     <h3>実行結果</h3>
-    <div id="nako3_result" class="nako3result"></div>
+    <!-- ERROR -->
+    <div id="nako3_error" class="nako3error" style="display: none"></div>
+
+	<!!-- RESULT -->
+    <div id="nako3_result" class="nako3result" style="display: none"></div>
     <audio id="audio1"></audio>
     <video id="video1" width="320"></video>
     <img id="img1" width="160"></img>
