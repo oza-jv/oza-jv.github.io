@@ -45,7 +45,7 @@
       editor.getSession().setMode("ace/mode/text");
       editor.getSession().setUseWrapMode(true);
       editor.getSession().setTabSize(2);
-      editor.setValue("「こんにちは」と表示。\n", 2);
+      editor.setValue("「こんにちは」と表示。\n", 1);
       
       
       // nadesiko init
@@ -59,7 +59,7 @@
 		  var addon =
 		    "「" + div_name + "」へDOM親要素設定;" +
 		    "「" + div_name + "」に「」をHTML設定;"
-		  const preCode = addon + "\n"
+		  const preCode = addon
 		  try {
 		    nako3_clear()
 		    navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
