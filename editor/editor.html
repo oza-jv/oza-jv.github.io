@@ -15,7 +15,7 @@
 <style>
 .nako3result {
   background-color: #f0fff0; padding:8px;
-  fontsize: 18px;
+  fontsize: 16px;
   line-height: 1.1em;
 }
 .nako3error {
@@ -24,8 +24,8 @@
 }
 </style>
 <div class="wrapper" style="display: flex;">
-  <section class="main" style="width: 40%; padding: 0px 20px">
-    <h2>なでしこでプログラムをつくろう！</h2>
+  <section class="main" style="width: 50%; padding: 0px 20px">
+    <h3>なでしこでプログラムをつくろう！</h3>
     <div>
       <button onclick="nako3_run(1,1)">▶ 実行</button>
     </div>
@@ -41,7 +41,7 @@
       // ace.js init
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/clouds");
-      editor.setFontSize(18);
+      editor.setFontSize(16);
       editor.getSession().setMode("ace/mode/text");
       editor.getSession().setUseWrapMode(true);
       editor.getSession().setTabSize(2);
@@ -108,8 +108,8 @@
     </script>
   </section>
   
-  <section class="sub" style="width: 60%; padding: 0px 20px">
-    <h1>実行結果</h1>
+  <section class="sub" style="width: 50%; padding: 0px 20px">
+    <h3>実行結果</h3>
     <div id="nako3_result" class="nako3result"></div>
     <audio id="audio1"></audio>
     <video id="video1" width="320"></video>
