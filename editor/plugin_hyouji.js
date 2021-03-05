@@ -16,7 +16,11 @@ const PluginHyouji = {
       te = document.createElement('br');
       parent.appendChild(te);
     }
-  }
+  },
+  
+  'クジラ': { type: 'const', value: './img/kujira.png' },
+  'ライオン': { type: 'const', value: './img/lion.gif' },
+  'ペンギン': { type: 'const', value: './img/penguin.gif' }
 }
 
 // モジュールのエクスポート(必ず必要)

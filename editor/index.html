@@ -7,7 +7,7 @@
 
 <body>
 <!-- なでしこ3のエンジンを取り込み -->
-<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/wnako3.js&run"></script>
 <!-- プラグインを取り込み -->
 <script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
 <script type="text/javascript" src="./plugin_hyouji.js"></script>
@@ -52,8 +52,8 @@
 		<div>
 			<select id="nako3_sample">
 				<option value="">お手本を選ぶ</option>
-				<option value="sample-movie.txt">動画の使い方</option>
-				<option value="sample-kazuate.txt">数当てゲーム</option>
+				<option value="./sample/sample-movie.txt">動画の使い方</option>
+				<option value="./sample/sample-kazuate.txt">数当てゲーム</option>
 				<option value="dummy.txt">ダミー</option>
 			</select>
 			<button onclick="nako3_loadsample()">←選んだお手本を読み込む</button>
@@ -71,9 +71,8 @@
 			editor.getSession().setMode("ace/mode/text");
 			editor.getSession().setUseWrapMode(false);
 			editor.getSession().setTabSize(2);
-			var defs = "「kujira.png」を絵追加。\n";
-			defs += "「こんにちは、クジラです。」と話す。\n";
-			defs += "「一緒に、プログラミングを、勉強しましょう」と話す。\n";
+			var defs =	"クジラを絵追加。\n" +
+						"「こんにちは、クジラです。よろしくね。」と話す。\n";
 			editor.setValue(defs , 1);
 			
 			// nadesiko init
@@ -84,12 +83,14 @@
 				}
 			const code = editor.getValue()
 			var div_name = "#nako3_result"
+			var canvas_name = "#nako3_canvas"
 			var addon =
 				"「" + div_name + "」へDOM親要素設定;" +
-				"「" + div_name + "」に「」をHTML設定;"
+				"「" + div_name + "」に「」をHTML設定;" +
+				"「" + canvas_name + "」へ描画開始;"
 			const preCode = addon
 			try {
-				nako3_clear()
+				nako3_clear(0)
 				navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
 				console.log("DONE")
 			} catch (e) {
@@ -128,13 +129,22 @@
 		}
 		
 		const nako3_clear = function (s) {
+			// 引数0ならエラーとinfoだけ消す。0より大きいときは結果も消す。
 			var result = document.getElementById("nako3_result")
 			if (!result) return
 			result.innerHTML = ''
+
+			var canvas = document.getElementById("nako3_canvas")
+			if (!canvas) return
+			var ctx = canvas.getContext('2d')
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+
 			if ( s > 0 )	{
 				result.style.display = 'none'
+				canvas.style.display = 'none'
 			} else {
 				result.style.display = 'block'
+				canvas.style.display = 'block'
 			}
 
 			var err = document.getElementById("nako3_error")
@@ -277,6 +287,7 @@
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
 		<div id="nako3_result" class="nako3result" style="display: none"></div>
+		<canvas id="nako3_canvas" width="640" height="640" display="none"></canvas>
 	</section>
 </div>
 <body></html>
