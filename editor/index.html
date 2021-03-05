@@ -9,6 +9,12 @@
 <!-- なでしこ3のエンジンを取り込み -->
 <script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/wnako3.js&run"></script>
 <!-- プラグインを取り込み -->
+<script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_csv.js'></script>
+<script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_datetime.js'></script>
+<script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_markup.js'></script>
+<script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_kansuji.js'></script>
+<script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_turtle.js'></script>
+<script defer src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
 <script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
 <script type="text/javascript" src="./plugin_hyouji.js"></script>
 <!-- 独自スタイル定義 -->
@@ -249,7 +255,6 @@
 				
 				const c = confirm( s + " を読み込んでいいですか？");
 				if (c) {
-					//nako3_clear(1);
 					fetch( f )
 						.then((data) => {
 							if (data.ok) {
@@ -275,7 +280,7 @@
 		</script>
 	</section>
 	
-	<section class="sub" style="width: 50%; padding: 0px 20px">
+	<section class="sub" style="width: 640px; padding: 0px 20px">
 		<h3>■実行結果</h3>
 		<button onclick="nako3_clear(1);">結果を消す</button><hr />
 		<!-- ERROR -->
