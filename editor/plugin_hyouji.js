@@ -20,7 +20,10 @@ const PluginHyouji = {
   
   'クジラ': { type: 'const', value: './img/kujira.png' },
   'ライオン': { type: 'const', value: './img/lion.gif' },
-  'ペンギン': { type: 'const', value: './img/penguin.gif' }
+  'ペンギン': { type: 'const', value: './img/penguin.gif' },
+  '黒クジラ': { type: 'const', value: './img/kujira-bk.png' },
+  'ピンポン': { type: 'const', value: './audio/se_maoudamashii_chime13.mp3' },
+  'ブブー': { type: 'const', value: './audio/se_maoudamashii_onepoint32.mp3' }
 }
 
 // モジュールのエクスポート(必ず必要)

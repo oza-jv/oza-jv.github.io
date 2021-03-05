@@ -2,10 +2,10 @@
 
 // 定数の定義
 音ID＝「audio1」。
-正解絵＝「../img/kujira.png」。
-残念絵＝「../img/kujira-bk.png」。
-正解音＝「../audio/se_maoudamashii_chime13.mp3」。
-残念音＝「../audio/se_maoudamashii_onepoint32.mp3」。
+正解絵＝クジラ。
+残念絵＝黒クジラ。
+正解音＝ピンポン。
+残念音＝ブブー。
 
 // 初期値設定
 サイコロ面＝１０。		// #5 数を当てる範囲。「６」ならば１～６までの範囲。
