@@ -113,6 +113,7 @@
 			var err = document.getElementById("nako3_error")
 			if (!err) return
 			s = "" + s // 文字列に変換
+			
 			// エラーだった場合
 			if (s.substr(0, 9) == "==ERROR==") {
 				s = s.substr(9)
@@ -265,7 +266,7 @@
 						})
 						.then((text) => {
 							editor.setValue( text, 1 );
-							nako3_clear(0);
+							nako3_clear(1);
 							nako3_print( s + " を読み込みました");
 						})
 						.catch(e => {
