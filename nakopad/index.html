@@ -46,17 +46,17 @@ button {
 	flex-wrap: wrap;
 }
 .main {
-	width: 45%;
+	width: 50%;
 	padding: 0px 10px;
 	//background-color: #f0f0ff;
 }
 .sub {
-	width: 40%;
+	width: 45%;
 	padding: 0px 10px;
 	//background-color: #fff0ff;
 }
 .btnsub {
-	width: 100%;
+	width: 95%;
 	padding: 0px 10px;
 	//background-color: #f0ffff;
 }
@@ -87,21 +87,21 @@ button {
 		</div>
 		<hr />
 		<!-- ace.js editor -->
-		<div id="editor" style="height: 480px; border:2px solid black;"></div>
+		<div id="editor" style="height: 480px; width:100%; border:2px solid black;"></div>
 
 		<!-- ace.js editor -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 		<script>
-			const LSKEY = "nakoedit";
+			const LSKEY = "nakoedit";	// ローカルストレージの保存キー
 		
 			// ace.js init
 			var editor = ace.edit("editor");
 			editor.setTheme("ace/theme/clouds");
-			editor.setFontSize(15);
+			editor.setFontSize(16);
 			editor.getSession().setMode("ace/mode/text");
 			editor.getSession().setUseWrapMode(false);
 			editor.getSession().setTabSize(2);
-			editor.setOption("showInvisibles", true)
+			editor.setOption("showInvisibles", false)
 			var defs =	"クジラを絵追加。\n" +
 						"「こんにちは、クジラです。よろしくね。」と話す。\n";
 			editor.setValue(defs , 1);
@@ -265,7 +265,12 @@ button {
 						reader.addEventListener('load', (event) => {
 							editor.setValue( event.target.result, 1 );
 							nako3_clear(0);
-							nako3_print( f.name + " を読み込みました");
+							nako3_print( f.name + " を読み込みました" + s);
+							
+							// ファイル名をセット
+							var s = baseName( f.name );
+							var fn = document.getElementById("nako3_filename");
+							fn.value = s;
 						});
 						reader.readAsText(f);
 					}
@@ -306,6 +311,40 @@ button {
 				}
 			}
 
+			const nako3_savefile= function () {
+				try {
+					// テキスト取得
+					const txt = editor.getValue();
+					if( txt.length < 1 ) {
+						nako3_print( "==ERROR==保存するプログラムがありません。");
+						return;
+					}
+					
+					const f = document.getElementById("nako3_filename");
+					if (!f) return;
+					var fn = f.value;
+					if ( fn.length < 1 ) {
+						nako3_print( "==ERROR==ファイル名を入力してください。");
+						return;
+					} else {
+						fn += ".txt";
+					}
+					
+					// 文字をBlob化
+					const blob = new Blob([txt], { type: 'text/plain' });
+					
+					// ダウンロード用のaタグ生成
+					const a = document.getElementById("nako3_save");
+					a.href = URL.createObjectURL( blob );
+					a.download = fn;
+					a.click();
+					
+					nako3_print( "プログラムを保存しました。保存したファイルは，ダウンロードフォルダにあります。" );
+				} catch(e) {
+					nako3_print(e);
+				}
+			}
+
 			const nako3_canvas_on = function () {
 				var canvas_name = "#nako3_canvas"
 				var canvas = document.getElementById( canvas_name )
@@ -329,7 +368,15 @@ button {
 				if (typeof(navigator.nako3) === 'undefined') return
 				clearInterval(nako3_init_timer)
 				nako3_add_func()
-			}, 500)
+			}, 500);
+			
+			// ファイル名から拡張子を取り除く
+			function baseName(str) {
+				var base = new String(str).substring(str.lastIndexOf('/') + 1); 
+				if( base.lastIndexOf(".") != -1 )       
+					base = base.substring(0, base.lastIndexOf("."));
+			   return base;
+			}
 		</script>
 	</div>
 	
@@ -354,12 +401,6 @@ button {
 <div class="btnsub">
 	<hr />
 	<div class="btnsub_flex">
-		<button onclick="nako3_savels(1)">LSに保存</button>
-		<button onclick="nako3_loadls()">LSから読込</button>
-		<button onclick="nako3_clearls(1)">LSをクリア</button>
-	</div>
-	<hr />
-	<div>
 		<select id="nako3_sample">
 			<option value="">お手本を選ぶ</option>
 			<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
@@ -377,9 +418,17 @@ button {
 		<button onclick="nako3_loadsample()">お手本読込</button>
 	</div>
 	<hr />
-	<div>
-		<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
-		<!-- button onclick="nako3_loadfile()">ファイル読込</button -->
+	<div class="btnsub_flex">
+		プログラムを一時保存…
+		<button onclick="nako3_savels(1)">LSに保存</button>
+		<button onclick="nako3_loadls()">LSから読込</button>
+		<button onclick="nako3_clearls(1)">LSをクリア</button>
+	</div>
+	<hr />
+	<div style="display:block">
+		<div>ファイルから読込…<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/></div>
+		<div>ファイルに保存…<input type="text" id="nako3_filename" placeholder="ファイル名" size="20"/>.txt
+		<button onclick="nako3_savefile()">保存</button><a id="nako3_save" href=""></a></div>
 	</div>
 	<hr />
 </div>
