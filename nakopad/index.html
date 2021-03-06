@@ -198,7 +198,7 @@ button {
 				try {
 					var s = localStorage.getItem(LSKEY);
 					if (!s) {
-						nako3_print("ローカルストレージには，何も保存されていません");
+						nako3_print("==ERROR==ローカルストレージには，何も保存されていません");
 					} else {
 						const c = confirm("ローカルストレージに保存されているプログラムを読み込んでいいですか？");
 						if (c) {
