@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title>学習用なでしこパッド</title>
 </head>
 
@@ -32,16 +33,32 @@
 	background-color: #f0f0ff; padding:8px; color: #404090;
 	font-size:1em; border:1px solid #a0a0ff; margin:4px;
 }
+button {
+	padding: 5px 20px;
+	margin: 0 10px;
+}
 .flexbox {
 	display: flex;
+	//flex-wrap: wrap;
 }
 .main {
-	width: 50%;
-	padding: 0px 20px
+	width: 45%;
+	padding: 0px 10px;
+	//background-color: #f0f0ff;
 }
 .sub {
-	width: 50%;
-	padding: 0px 20px
+	width: 40%;
+	padding: 0px 10px;
+	//background-color: #fff0ff;
+}
+.btnsub {
+	width: 15%;
+	padding: 0px 10px;
+	//background-color: #f0ffff;
+}
+.btnsub_flex {
+	display: flex;
+	flex-wrap: wrap;
 }
 @media screen and (max-width: 1024px) {
 	.flexbox {
@@ -49,16 +66,20 @@
 	}
 	.flexbox .main {
 		width: 95%;
-		padding: 0px 20px
+		padding: 0px 20px;
 	}
 	.flexbox .sub {
 		width: 95%;
-		padding: 0px 20px
+		padding: 0px 20px;
+	}
+	.flexbox .btnsub {
+		width: 95%;
+		padding: 0px 20px;
 	}
 }
-
 </style>
 <div class="flexbox">
+	<!-- エディタエリア -->
 	<div class="main">
 		<h3>なでしこでプログラムをつくろう！</h3>
 		<div>
@@ -67,37 +88,6 @@
 		<hr />
 		<!-- ace.js editor -->
 		<div id="editor" style="height: 480px; border:2px solid black"></div>
-		<hr />
-		<div>
-			<button onclick="nako3_savels(1)">LSに保存</button>
-			<button onclick="nako3_loadls()">LSから読込</button>
-			<button onclick="nako3_clearls(1)">LSをクリア</button>
-		</div>
-		<hr />
-		<div>
-			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
-			<button onclick="nako3_loadfile()">←選んだファイルを読み込む</button>
-		</div>
-		<!-- sample -->
-		<hr />
-		<div>
-			<select id="nako3_sample">
-				<option value="">お手本を選ぶ</option>
-				<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
-				<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
-				<option value="./sample/sample-omikuji-3.txt">おみくじ３　もし～ならば～違えばもし</option>
-				<option value="./sample/sample-kazuate-1.txt">数当てゲーム１　乱数と分岐</option>
-				<option value="./sample/sample-kazuate-2.txt">数当てゲーム２　反復</option>
-				<option value="./sample/sample-kazuate-3.txt">数当てゲーム３　ヒントを加える</option>
-				<option value="./sample/sample-kazuate-4.txt">数当てゲーム４　フラグ変数を使う</option>
-				<option value="./sample/sample-kazuate.txt">数当てゲーム 豪華版</option>
-				<option value="./sample/sample-movie.txt">動画の使い方</option>
-				<option value="./sample/sample-chart1.txt">線グラフ</option>
-				<option value="dummy.txt">ダミー</option>
-			</select>
-			<button onclick="nako3_loadsample()">←選んだお手本を読み込む</button>
-		</div>
-		<hr />
 
 		<!-- ace.js editor -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -311,10 +301,10 @@
 				nako3_print(e);
 			}
 		}
-
 		</script>
 	</div>
 	
+	<!-- 結果表示エリア -->
 	<div class="sub">
 		<h3>■実行結果</h3>
 		<button onclick="nako3_clear(1);">結果を消す</button><hr />
@@ -327,7 +317,41 @@
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
 		<div id="nako3_result" class="nako3result" style="display: none"></div>
-		<canvas id="nako3_canvas" width="480" height="480" display="none"></canvas>
+		<canvas id="nako3_canvas" width="320" height="320" display="none"></canvas>
+	</div>
+	
+	<!-- 機能ボタンエリア -->
+	<div class="btnsub">
+		<hr />
+		<div class="btnsub_flex">
+			<button onclick="nako3_savels(1)">LSに保存</button>
+			<button onclick="nako3_loadls()">LSから読込</button>
+			<button onclick="nako3_clearls(1)">LSをクリア</button>
+		</div>
+		<hr />
+		<div>
+			<select id="nako3_sample">
+				<option value="">お手本を選ぶ</option>
+				<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
+				<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
+				<option value="./sample/sample-omikuji-3.txt">おみくじ３　もし～ならば～違えばもし</option>
+				<option value="./sample/sample-kazuate-1.txt">数当てゲーム１　乱数と分岐</option>
+				<option value="./sample/sample-kazuate-2.txt">数当てゲーム２　反復</option>
+				<option value="./sample/sample-kazuate-3.txt">数当てゲーム３　ヒントを加える</option>
+				<option value="./sample/sample-kazuate-4.txt">数当てゲーム４　フラグ変数を使う</option>
+				<option value="./sample/sample-kazuate.txt">数当てゲーム 豪華版</option>
+				<option value="./sample/sample-movie.txt">動画の使い方</option>
+				<option value="./sample/sample-chart1.txt">線グラフ</option>
+				<option value="dummy.txt">ダミー</option>
+			</select>
+			<button onclick="nako3_loadsample()">お手本読込</button>
+		</div>
+		<hr />
+		<div>
+			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
+			<!-- button onclick="nako3_loadfile()">ファイル読込</button -->
+		</div>
+		<hr />
 	</div>
 </div>
 <body></html>
