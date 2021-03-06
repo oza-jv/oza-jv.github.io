@@ -101,6 +101,7 @@ button {
 			editor.getSession().setMode("ace/mode/text");
 			editor.getSession().setUseWrapMode(false);
 			editor.getSession().setTabSize(2);
+			editor.setOption("showInvisibles", false)
 			var defs =	"クジラを絵追加。\n" +
 						"「こんにちは、クジラです。よろしくね。」と話す。\n";
 			editor.setValue(defs , 1);
