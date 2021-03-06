@@ -323,6 +323,11 @@ button {
 			  navigator.nako3.setFunc("描画オン", [], nako3_canvas_on);
 			  navigator.nako3.setFunc("描画オフ", [], nako3_canvas_off);
 			}
+			var nako3_init_timer = setInterval(function(){
+				if (typeof(navigator.nako3) === 'undefined') return
+				clearInterval(nako3_init_timer)
+				nako3_add_func()
+			}, 500)
 		</script>
 	</div>
 	
@@ -339,7 +344,7 @@ button {
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
 		<div id="nako3_result" class="nako3result" display="none"></div>
-		<canvas id="nako3_canvas" width="320" height="320" hidden></canvas>
+		<canvas id="nako3_canvas" width="320" height="160" hidden></canvas>
 	</div>
 </div>
 
