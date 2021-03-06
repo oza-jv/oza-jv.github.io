@@ -32,9 +32,34 @@
 	background-color: #f0f0ff; padding:8px; color: #404090;
 	font-size:1em; border:1px solid #a0a0ff; margin:4px;
 }
+.flexbox {
+	display: flex;
+}
+.main {
+	width: 50%;
+	padding: 0px 20px
+}
+.sub {
+	width: 50%;
+	padding: 0px 20px
+}
+@media screen and (max-width: 767px) {
+	.flexbox {
+		display: flex;
+	}
+	.flexbox .main {
+		width: 100%;
+		padding: 0px 20px
+	}
+	.flexbox .sub {
+		width: 100%;
+		padding: 0px 20px
+	}
+}
+
 </style>
-<div class="wrapper" style="display: flex;">
-	<section class="main" style="width: 50%; padding: 0px 20px">
+<div class="flexbox">
+	<div class="main">
 		<h3>なでしこでプログラムをつくろう！</h3>
 		<div>
 			プログラムを入力したら、<button onclick="nako3_run()">▶ 実行</button> しよう！
@@ -280,9 +305,9 @@
 		}
 
 		</script>
-	</section>
+	</div>
 	
-	<section class="sub" style="width: 640px; padding: 0px 20px">
+	<div class="sub">
 		<h3>■実行結果</h3>
 		<button onclick="nako3_clear(1);">結果を消す</button><hr />
 		<!-- ERROR -->
@@ -295,7 +320,7 @@
 		<audio id="audio1"></audio>
 		<div id="nako3_result" class="nako3result" style="display: none"></div>
 		<canvas id="nako3_canvas" width="640" height="640" display="none"></canvas>
-	</section>
+	</div>
 </div>
 <body></html>
 
