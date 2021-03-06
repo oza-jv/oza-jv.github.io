@@ -33,6 +33,10 @@
 	background-color: #f0f0ff; padding:8px; color: #404090;
 	font-size:1em; border:1px solid #a0a0ff; margin:4px;
 }
+.footer {
+	font-size:smaller; color:gray;
+	margin: 0 20px;
+}
 button {
 	padding: 5px 20px;
 	margin: 0 10px;
@@ -52,7 +56,7 @@ button {
 	//background-color: #fff0ff;
 }
 .btnsub {
-	width: 15%;
+	width: 100%;
 	padding: 0px 10px;
 	//background-color: #f0ffff;
 }
@@ -69,10 +73,6 @@ button {
 		padding: 0px 20px;
 	}
 	.flexbox .sub {
-		width: 95%;
-		padding: 0px 20px;
-	}
-	.flexbox .btnsub {
 		width: 95%;
 		padding: 0px 20px;
 	}
@@ -111,196 +111,200 @@ button {
 					alert('現在ライブラリを読み込み中です。しばらくお待ちください。')
 					return
 				}
-			const code = editor.getValue()
-			var div_name = "#nako3_result"
-			var canvas_name = "#nako3_canvas"
-			var addon =
-				"「" + div_name + "」へDOM親要素設定;" +
-				"「" + div_name + "」に「」をHTML設定;" +
-				"「" + canvas_name + "」へ描画開始;"
-			const preCode = addon
-			try {
-				nako3_clear(0)
-				navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
-				console.log("DONE")
-			} catch (e) {
-				nako3_print("==ERROR==" + e.message + "")
-				//editor.editorMarkers.addByError(code, e)
-				console.log(e)
+				const code = editor.getValue()
+				var div_name = "#nako3_result"
+				var canvas_name = "#nako3_canvas"
+				var addon =
+					"「" + div_name + "」へDOM親要素設定;" +
+					"「" + div_name + "」に「」をHTML設定;" +
+					"「" + canvas_name + "」へ描画開始;"
+				const preCode = addon
+				try {
+					nako3_clear(2)
+					navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
+					console.log("DONE")
+				} catch (e) {
+					nako3_print("==ERROR==" + e.message + "")
+					//editor.editorMarkers.addByError(code, e)
+					console.log(e)
+				}
 			}
-		}
 
-		const nako3_print = function (s) {
-			console.log("[表示] " + s)
-			var info = document.getElementById("nako3_info")
-			if (!info) return
-			var err = document.getElementById("nako3_error")
-			if (!err) return
-			s = "" + s // 文字列に変換
+			const nako3_print = function (s) {
+				console.log("[表示] " + s)
+				var info = document.getElementById("nako3_info")
+				if (!info) return
+				var err = document.getElementById("nako3_error")
+				if (!err) return
+				s = "" + s // 文字列に変換
+
+				var audio = document.querySelector("#audio1");
+				
+				// エラーだった場合
+				if (s.substr(0, 9) == "==ERROR==") {
+					s = s.substr(9)
+					err.innerHTML = s
+					err.style.display = 'block'
+					info.style.display = 'none'
+					audio.src = './audio/se_maoudamashii_system18.mp3';
+				} else {
+					info.innerHTML = to_html(s);
+					info.style.display = 'block'
+					err.style.display = 'none'
+					audio.src = './audio/se_maoudamashii_system13.mp3';
+				}
+
+				audio.currentTime = 0;
+				audio.play();
+			}
+
+			function to_html(s) {
+				s = '' + s
+				return s.replace(/\&/g, '&amp;')
+						.replace(/\</g, '&lt;')
+						.replace(/\>/g, '&gt;')
+			}
 			
-			// エラーだった場合
-			if (s.substr(0, 9) == "==ERROR==") {
-				s = s.substr(9)
-				err.innerHTML = s
-				err.style.display = 'block'
-				info.style.display = 'none'
-				return
-			} else {
-				info.innerHTML = to_html(s);
-				info.style.display = 'block'
-				err.style.display = 'none'
-			}
-		}
+			const nako3_clear = function (s) {
+				// 引数0ならエラーとinfoだけ消す。1なら実行結果だけ。2なら全て。
+				if ( s > 0 )	{
+					var result = document.getElementById("nako3_result")
+					if (!result) return
+					result.innerHTML = ''
+					//result.style.display = 'none'
 
-		function to_html(s) {
-			s = '' + s
-			return s.replace(/\&/g, '&amp;')
-					.replace(/\</g, '&lt;')
-					.replace(/\>/g, '&gt;')
-		}
-		
-		const nako3_clear = function (s) {
-			// 引数0ならエラーとinfoだけ消す。0より大きいときは結果も消す。
-			var result = document.getElementById("nako3_result")
-			if (!result) return
-			result.innerHTML = ''
-
-			var canvas = document.getElementById("nako3_canvas")
-			if (!canvas) return
-			var ctx = canvas.getContext('2d')
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-			if ( s > 0 )	{
-				result.style.display = 'none'
-				canvas.style.display = 'none'
-			} else {
-				result.style.display = 'block'
-				canvas.style.display = 'block'
-			}
-
-			var err = document.getElementById("nako3_error")
-			if (!err) return
-			err.innerHTML = ''
-			err.style.display = 'none'
-
-			var info = document.getElementById("nako3_info")
-			if (!info) return
-			info.innerHTML = ''
-			info.style.display = 'none'
-		}
-		
-		// load and save to local storage
-		const nako3_loadls = function () {
-			try {
-				var s = localStorage.getItem(LSKEY);
-				if (!s) {
-					nako3_print("ローカルストレージには，何も保存されていません");
-				} else {
-					const c = confirm("ローカルストレージに保存されているプログラムを読み込んでいいですか？");
-					if (c) {
-						nako3_clear(1);
-						s = "" + s;
-						editor.setValue(s, 1);
-						nako3_print("ローカルストレージに保存されているプログラムを読み込みました");
-					}
+					var canvas = document.getElementById("nako3_canvas")
+					if (!canvas) return
+					var ctx = canvas.getContext('2d')
+					ctx.clearRect(0, 0, canvas.width, canvas.height)
+					//canvas.hidden = true
 				}
-			} catch(e) {
-				nako3_print(e);
+
+				if ( (s == 0) || (s == 2) ) {
+					var err = document.getElementById("nako3_error")
+					if (!err) return
+					err.innerHTML = ''
+					err.style.display = 'none'
+
+					var info = document.getElementById("nako3_info")
+					if (!info) return
+					info.innerHTML = ''
+					info.style.display = 'none'
+				}
 			}
-		}
-
-		const nako3_savels = function (flag) {
-			try {
-				var c = false;
-				if (flag > 0) {
-					c = confirm("ローカルストレージにプログラムを保存していいですか？");
-				} else {
-					c = true;
-				}
-				
-				if (c) {
-					var s = editor.getValue();
-						localStorage.setItem(LSKEY, s);
-						nako3_print("ローカルストレージにプログラムを保存しました");
-				}
-			} catch(e) {
-				nako3_print(e);
-			}
-		}
-
-		const nako3_clearls = function (flag) {
-			try {
-				var c = false;
-				if (flag > 0) {
-					c = confirm("ローカルストレージに保存されているプログラムを消去していいですか？");
-				} else {
-					c = true;
-				}
-				
-				if (c) {
-					localStorage.removeItem(LSKEY);
-					nako3_print("ローカルストレージに保存されているプログラムを消去しました");
-				}
-			} catch(e) {
-				nako3_print(e);
-			}
-		}
-
-		// load and save to file
-		const nako3_loadfile= function () {
-			try {
-				// file select
-				const f = document.getElementById("nako3_file").files[0];
-				if (!f) return;
-
-				const c = confirm( f.name + " を読み込んでいいですか？");
-				if (c) {
-					//nako3_clear(1);
-					const reader = new FileReader();
-
-					reader.addEventListener('load', (event) => {
-						editor.setValue( event.target.result, 1 );
-						nako3_clear(0);
-						nako3_print( f.name + " を読み込みました");
-					});
-					reader.readAsText(f);
-				}
-			} catch(e) {
-				nako3_print(e);
-			}
-		}
-
-		const nako3_loadsample= function () {
-			try {
-				// file select
-				const sel = document.getElementById("nako3_sample");
-				var f = sel.value;
-				if (!f) return;
-				var s = sel.options[ sel.selectedIndex ].text;
-				
-				const c = confirm( s + " を読み込んでいいですか？");
-				if (c) {
-					fetch( f )
-						.then((data) => {
-							if (data.ok) {
-								return data.text();
-							} else {
-								return Promise.reject(new Error('読み込み失敗'));
-							}
-						})
-						.then((text) => {
-							editor.setValue( text, 1 );
+			
+			// load and save to local storage
+			const nako3_loadls = function () {
+				try {
+					var s = localStorage.getItem(LSKEY);
+					if (!s) {
+						nako3_print("ローカルストレージには，何も保存されていません");
+					} else {
+						const c = confirm("ローカルストレージに保存されているプログラムを読み込んでいいですか？");
+						if (c) {
 							nako3_clear(1);
-							nako3_print( s + " を読み込みました");
-						})
-						.catch(e => {
-							nako3_print(e);
-						});
+							s = "" + s;
+							editor.setValue(s, 1);
+							nako3_print("ローカルストレージに保存されているプログラムを読み込みました");
+						}
+					}
+				} catch(e) {
+					nako3_print(e);
 				}
-			} catch(e) {
-				nako3_print(e);
 			}
-		}
+
+			const nako3_savels = function (flag) {
+				try {
+					var c = false;
+					if (flag > 0) {
+						c = confirm("ローカルストレージにプログラムを保存していいですか？");
+					} else {
+						c = true;
+					}
+					
+					if (c) {
+						var s = editor.getValue();
+							localStorage.setItem(LSKEY, s);
+							nako3_print("ローカルストレージにプログラムを保存しました");
+					}
+				} catch(e) {
+					nako3_print(e);
+				}
+			}
+
+			const nako3_clearls = function (flag) {
+				try {
+					var c = false;
+					if (flag > 0) {
+						c = confirm("ローカルストレージに保存されているプログラムを消去していいですか？");
+					} else {
+						c = true;
+					}
+					
+					if (c) {
+						localStorage.removeItem(LSKEY);
+						nako3_print("ローカルストレージに保存されているプログラムを消去しました");
+					}
+				} catch(e) {
+					nako3_print(e);
+				}
+			}
+
+			// load and save to file
+			const nako3_loadfile= function () {
+				try {
+					// file select
+					const f = document.getElementById("nako3_file").files[0];
+					if (!f) return;
+
+					const c = confirm( f.name + " を読み込んでいいですか？");
+					if (c) {
+						//nako3_clear(1);
+						const reader = new FileReader();
+
+						reader.addEventListener('load', (event) => {
+							editor.setValue( event.target.result, 1 );
+							nako3_clear(0);
+							nako3_print( f.name + " を読み込みました");
+						});
+						reader.readAsText(f);
+					}
+				} catch(e) {
+					nako3_print(e);
+				}
+			}
+
+			const nako3_loadsample= function () {
+				try {
+					// file select
+					const sel = document.getElementById("nako3_sample");
+					var f = sel.value;
+					if (!f) return;
+					var s = sel.options[ sel.selectedIndex ].text;
+					
+					const c = confirm( s + " を読み込んでいいですか？");
+					if (c) {
+						fetch( f )
+							.then((data) => {
+								if (data.ok) {
+									return data.text();
+								} else {
+									return Promise.reject(new Error('読み込み失敗'));
+								}
+							})
+							.then((text) => {
+								editor.setValue( text, 1 );
+								nako3_clear(1);
+								nako3_print( s + " を読み込みました");
+							})
+							.catch(e => {
+								nako3_print(e);
+							});
+					}
+				} catch(e) {
+					nako3_print(e);
+				}
+			}
 		</script>
 	</div>
 	
@@ -316,44 +320,49 @@ button {
 
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
-		<div id="nako3_result" class="nako3result" style="display: none"></div>
-		<canvas id="nako3_canvas" width="320" height="320" display="none"></canvas>
-	</div>
-	
-	<!-- 機能ボタンエリア -->
-	<div class="btnsub">
-		<hr />
-		<div class="btnsub_flex">
-			<button onclick="nako3_savels(1)">LSに保存</button>
-			<button onclick="nako3_loadls()">LSから読込</button>
-			<button onclick="nako3_clearls(1)">LSをクリア</button>
-		</div>
-		<hr />
-		<div>
-			<select id="nako3_sample">
-				<option value="">お手本を選ぶ</option>
-				<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
-				<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
-				<option value="./sample/sample-omikuji-3.txt">おみくじ３　もし～ならば～違えばもし</option>
-				<option value="./sample/sample-kazuate-1.txt">数当てゲーム１　乱数と分岐</option>
-				<option value="./sample/sample-kazuate-2.txt">数当てゲーム２　反復</option>
-				<option value="./sample/sample-kazuate-3.txt">数当てゲーム３　ヒントを加える</option>
-				<option value="./sample/sample-kazuate-4.txt">数当てゲーム４　フラグ変数を使う</option>
-				<option value="./sample/sample-kazuate.txt">数当てゲーム 豪華版</option>
-				<option value="./sample/sample-movie.txt">動画の使い方</option>
-				<option value="./sample/sample-chart1.txt">線グラフ</option>
-				<option value="dummy.txt">ダミー</option>
-			</select>
-			<button onclick="nako3_loadsample()">お手本読込</button>
-		</div>
-		<hr />
-		<div>
-			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
-			<!-- button onclick="nako3_loadfile()">ファイル読込</button -->
-		</div>
-		<hr />
+		<div id="nako3_result" class="nako3result" display="none"></div>
+		<canvas id="nako3_canvas" width="320" height="320"></canvas>
 	</div>
 </div>
+
+<!-- 機能ボタンエリア -->
+<div class="btnsub">
+	<hr />
+	<div class="btnsub_flex">
+		<button onclick="nako3_savels(1)">LSに保存</button>
+		<button onclick="nako3_loadls()">LSから読込</button>
+		<button onclick="nako3_clearls(1)">LSをクリア</button>
+	</div>
+	<hr />
+	<div>
+		<select id="nako3_sample">
+			<option value="">お手本を選ぶ</option>
+			<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
+			<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
+			<option value="./sample/sample-omikuji-3.txt">おみくじ３　もし～ならば～違えばもし</option>
+			<option value="./sample/sample-kazuate-1.txt">数当てゲーム１　乱数と分岐</option>
+			<option value="./sample/sample-kazuate-2.txt">数当てゲーム２　反復</option>
+			<option value="./sample/sample-kazuate-3.txt">数当てゲーム３　ヒントを加える</option>
+			<option value="./sample/sample-kazuate-4.txt">数当てゲーム４　フラグ変数を使う</option>
+			<option value="./sample/sample-kazuate.txt">数当てゲーム 豪華版</option>
+			<option value="./sample/sample-movie.txt">動画の使い方</option>
+			<option value="./sample/sample-chart1.txt">線グラフ</option>
+			<option value="dummy.txt">ダミー</option>
+		</select>
+		<button onclick="nako3_loadsample()">お手本読込</button>
+	</div>
+	<hr />
+	<div>
+		<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/>
+		<!-- button onclick="nako3_loadfile()">ファイル読込</button -->
+	</div>
+	<hr />
+</div>
+	
+<!-- footer -->
+<div class="footer">
+	<div>※<a href="https://nadesi.com/">日本語プログラミング言語「なでしこ」 v3.1.19</a> を利用しています。</div>
+	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank">フリー音楽素材/魔王魂</a>からお借りしています。</div>
+	<div>※画像素材は，なでしこv1に同梱のもの を使用しています。</div>
+</div>
 <body></html>
-
-
