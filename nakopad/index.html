@@ -171,13 +171,11 @@ button {
 					var result = document.getElementById("nako3_result")
 					if (!result) return
 					result.innerHTML = ''
-					//result.style.display = 'none'
 
 					var canvas = document.getElementById("nako3_canvas")
 					if (!canvas) return
 					var ctx = canvas.getContext('2d')
 					ctx.clearRect(0, 0, canvas.width, canvas.height)
-					//canvas.hidden = true
 				}
 
 				if ( (s == 0) || (s == 2) ) {
@@ -305,6 +303,26 @@ button {
 					nako3_print(e);
 				}
 			}
+
+			const nako3_canvas_on = function () {
+				var canvas_name = "#nako3_canvas"
+				var canvas = document.getElementById( canvas_name )
+				if (!canvas) return
+				canvas.hidden = false
+			}
+
+			const nako3_canvas_off = function () {
+				var canvas_name = "#nako3_canvas"
+				var canvas = document.getElementById( canvas_name )
+				if (!canvas) return
+				canvas.hidden = true
+			}
+
+			// 独自関数の登録
+			var nako3_add_func = function () {
+			  navigator.nako3.setFunc("描画オン", [], nako3_canvas_on);
+			  navigator.nako3.setFunc("描画オフ", [], nako3_canvas_off);
+			}
 		</script>
 	</div>
 	
@@ -321,7 +339,7 @@ button {
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
 		<div id="nako3_result" class="nako3result" display="none"></div>
-		<canvas id="nako3_canvas" width="320" height="320"></canvas>
+		<canvas id="nako3_canvas" width="320" height="320" hidden></canvas>
 	</div>
 </div>
 
