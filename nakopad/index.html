@@ -87,7 +87,7 @@ button {
 		</div>
 		<hr />
 		<!-- ace.js editor -->
-		<div id="editor" style="height: 480px; width:100%; border:2px solid black;"></div>
+		<div id="editor" style="height: 400px; width:100%; border:2px solid black;"></div>
 
 		<!-- ace.js editor -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -189,8 +189,10 @@ button {
 
 					var canvas = document.getElementById("nako3_canvas")
 					if (!canvas) return
+					//canvas.style.visibility='hidden';
 					var ctx = canvas.getContext('2d')
 					ctx.clearRect(0, 0, canvas.width, canvas.height)
+					canvas.hidden = true;
 				}
 
 				if ( (s == 0) || (s == 2) ) {
@@ -359,17 +361,17 @@ button {
 			}
 
 			const nako3_canvas_on = function () {
-				var canvas_name = "#nako3_canvas"
-				var canvas = document.getElementById( canvas_name )
+				var canvas = document.getElementById( "nako3_canvas" )
 				if (!canvas) return
-				canvas.hidden = false
+				//canvas.style.visibility='visible';
+				canvas.hidden = false;
 			}
 
 			const nako3_canvas_off = function () {
-				var canvas_name = "#nako3_canvas"
-				var canvas = document.getElementById( canvas_name )
+				var canvas = document.getElementById( "nako3_canvas" )
 				if (!canvas) return
-				canvas.hidden = true
+				//canvas.style.visibility='hidden';
+				canvas.hidden = true;
 			}
 
 			// 独自関数の登録
@@ -390,6 +392,10 @@ button {
 					base = base.substring(0, base.lastIndexOf("."));
 			   return base;
 			}
+			
+			// 初期
+			nako3_clear(2);
+			nako3_canvas_off();
 		</script>
 	</div>
 	
@@ -406,8 +412,8 @@ button {
 
 		<!!-- RESULT -->
 		<audio id="audio1"></audio>
+		<canvas id="nako3_canvas" width="400" height="360" hidden></canvas>
 		<div id="nako3_result" class="nako3result" display="none"></div>
-		<canvas id="nako3_canvas" width="320" height="160" hidden></canvas>
 	</div>
 </div>
 
@@ -450,8 +456,8 @@ button {
 <!-- footer -->
 <div class="footer">
 	<div>学習用なでしこパッド v1.0  (2021/3/7)</div>
-	<div>※<a href="https://nadesi.com/">日本語プログラミング言語「なでしこ」 v3.1.19</a> を利用しています。</div>
-	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank">フリー音楽素材/魔王魂</a>のものを使用しています。</div>
+	<div>※<a href="https://nadesi.com/" target="_blank" rel="noopener noreferrer">日本語プログラミング言語「なでしこ」 v3.1.19</a> を利用しています。</div>
+	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank" rel="noopener noreferrer">フリー音楽素材/魔王魂</a>のものを使用しています。</div>
 	<div>※画像素材は，なでしこv1に同梱のもの を使用しています。</div>
 </div>
 <body></html>
