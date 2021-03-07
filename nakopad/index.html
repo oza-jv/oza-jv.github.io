@@ -123,6 +123,7 @@ button {
 				try {
 					nako3_clear(2)
 					navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
+					scr_to_id( "nako3_result" );
 					console.log("DONE")
 				} catch (e) {
 					nako3_print("==ERROR==" + e.message + "")
@@ -148,14 +149,16 @@ button {
 					err.style.display = 'block'
 					info.style.display = 'none'
 					audio.src = './audio/se_maoudamashii_system18.mp3';
+					scr_to_id( "nako3_error" );
 				} else {
 					info.innerHTML = to_html(s);
 					info.style.display = 'block'
 					err.style.display = 'none'
 					audio.src = './audio/se_maoudamashii_system13.mp3';
+					scr_to_id( "nako3_info" );
 				}
 
-				window.scrollTo(0,0);
+				// エラー音
 				audio.currentTime = 0;
 				audio.play();
 			}
@@ -165,6 +168,16 @@ button {
 				return s.replace(/\&/g, '&amp;')
 						.replace(/\</g, '&lt;')
 						.replace(/\>/g, '&gt;')
+			}
+			
+			function scr_to_id( id ) {
+				var el = document.getElementById( id );
+				if (!el) return;
+				var rect = el.getBoundingClientRect();
+				
+				var elemtop = rect.top + window.pageYOffset;
+				if( elemtop < 200 ) elemtop = 0;
+				document.documentElement.scrollTop = elemtop;
 			}
 			
 			const nako3_clear = function (s) {
@@ -265,7 +278,7 @@ button {
 						reader.addEventListener('load', (event) => {
 							editor.setValue( event.target.result, 1 );
 							nako3_clear(0);
-							nako3_print( f.name + " を読み込みました" + s);
+							nako3_print( f.name + " を読み込みました");
 							
 							// ファイル名をセット
 							var s = baseName( f.name );
@@ -419,9 +432,9 @@ button {
 		<button onclick="nako3_loadsample()">お手本読込</button>
 	</div>
 	<hr />
+	<div>プログラムを一時保存…</div>
 	<div class="btnsub_flex">
-		プログラムを一時保存…
-		<button onclick="nako3_savels(1)">LSに保存</button>
+		<button onclick="nako3_savels(1)">LSに一時保存</button>
 		<button onclick="nako3_loadls()">LSから読込</button>
 		<button onclick="nako3_clearls(1)">LSをクリア</button>
 	</div>
@@ -436,8 +449,9 @@ button {
 
 <!-- footer -->
 <div class="footer">
+	<div>学習用なでしこパッド v1.0  (2021/3/7)</div>
 	<div>※<a href="https://nadesi.com/">日本語プログラミング言語「なでしこ」 v3.1.19</a> を利用しています。</div>
-	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank">フリー音楽素材/魔王魂</a>からお借りしています。</div>
+	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank">フリー音楽素材/魔王魂</a>のものを使用しています。</div>
 	<div>※画像素材は，なでしこv1に同梱のもの を使用しています。</div>
 </div>
 <body></html>
