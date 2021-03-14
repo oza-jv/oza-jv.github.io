@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マウス操作の練習</title>
+</head>
+
+<body>
+<!-- ここに画面レイアウトをあらかじめ作っておく -->
+<div id="div1"></div>
+<audio id="audio1"></audio>
+<!-- video id="video1" width="320"></video -->
+<!-- img id="img1" width="160"></img -->
+<canvas id="nako3_canvas" width="600" height="600"></canvas>
+
+<!-- なでしこ3のエンジンを取り込み -->
+	<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/wnako3.js&run"></script>
+<!-- プラグインを取り込み -->
+<script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+// 初期設定 -- HTML内でなでしこを使うときは必ず実行する
+結果領域＝「#div1」。
+結果領域へDOM親要素設定。結果領域に「」をHTML設定。
+描画領域＝「#nako3_canvas」。
+描画領域へ描画開始。
+
+// ここから，なでしこのプログラムを書いていきます
+押下フラグ＝オフ
+Ｐ＝描画中キャンバス。
+
+MX=600。MY=600。	// キャンバスの端
+TX=MX/2。TY=MY/2。	// 的の初期位置
+TR=40。TC=黄色。	// 的の半径，色
+W=MX-TR。H=MX-TR。
+
+●的描画（XとYにCで）とは
+　　Cに塗色設定。
+　　[X,Y]へTRの円描画。
+ここまで。
+
+●的移動とは
+	TX=(Wの乱数)。
+	TY=(Hの乱数)。
+	TXとTYに黄色で的描画。
+ここまで。
+
+PT=0。
+STIME=今。
+
+的移動。
+「開始　{STIME}」と書く。
+
+Ｐをマウス押した時には
+	HX=マウスX。HY=マウスY。
+	ZX=(HX-TX)の絶対値。
+	ZY=(HY-TY)の絶対値。
+
+　　#当たり判定
+	もし、(ZX+ZY)<(TR/2)ならば、
+	　　＃当たり
+　　　　HXとHYに赤色で的描画。
+　　　　PT=PT+1。
+	　　#続行判定
+	　　もし、PT>9ならば、
+	　　　　＃終了
+	　　　　ETIME=今。
+	　　　　「終了　{ETIME}」と書く。
+	　　違えば，
+	　　　　的移動。
+	　　ここまで。
+　　違えば、
+　　　　HXとHYに青色で的描画。
+　　ここまで。
+
+
+ここまで。
+
+
+
+</script>
+</body></html>
