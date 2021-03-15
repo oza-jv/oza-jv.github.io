@@ -121,7 +121,8 @@ button {
 				try {
 					nako3_clear(2)
 					navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
-					scr_to_id( "nako3_result" );
+					//scr_to_id( "nako3_result" );
+					scr_to_id( "nako3_retop" );
 					console.log("DONE")
 				} catch (e) {
 					nako3_print("==ERROR==" + e.message + "")
@@ -147,13 +148,15 @@ button {
 					err.style.display = 'block'
 					info.style.display = 'none'
 					audio.src = './audio/se_maoudamashii_system18.mp3';
-					scr_to_id( "nako3_error" );
+					//scr_to_id( "nako3_error" );
+					scr_to_id( "nako3_retop" );
 				} else {
 					info.innerHTML = to_html(s);
 					info.style.display = 'block'
 					err.style.display = 'none'
 					audio.src = './audio/se_maoudamashii_system13.mp3';
-					scr_to_id( "nako3_info" );
+					//scr_to_id( "nako3_info" );
+					scr_to_id( "nako3_retop" );
 				}
 
 				// エラー音
@@ -431,6 +434,7 @@ button {
 		<h3>■実行結果</h3>
 		<button onclick="nako3_run()">▶ 実行</button>
 		<button onclick="nako3_clear(1);">結果を消す</button><hr />
+		<div id="nako3_retop"></div>
 		<!-- ERROR -->
 		<div id="nako3_error" class="nako3error" style="display: none"></div>
 
