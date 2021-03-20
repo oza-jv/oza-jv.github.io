@@ -89,6 +89,13 @@ video {
 .btnarea {
 	background-color: #f0f0ff; padding:8px;
 }
+.btnarea2 {
+	background-color: #80ff80; padding:8px;
+}
+.btnarea3 {
+	background-color: #ff8080; padding:8px;
+}
+
 </style>
 <div class="flexbox">
 	<!-- エディタエリア -->
@@ -180,20 +187,22 @@ video {
 		  </select>→
 		  <button onclick="nako3_loadsample()">お手本読込</button>
 		</div>
-		<button onClick="nako3_click_loadfile()">保存したファイルを読み込む</button>
-		<button onclick="nako3_loadls()">LSから読み込む</button>
+		<div  class="btnarea2"><button onClick="nako3_click_loadfile()">▼保存したファイルを読み込む</button></div>
+		<div  class="btnarea3"><button onclick="nako3_loadls()">▽LSから読み込む</button></div>
 	</div>
 
 	<hr />
 	<div>■プログラムを保存するときは…</div>
 	<div class="btnsub_flex">
-		<div style="display:block" class="btnarea">
+		<div style="display:block" class="btnarea2">
 			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()" style="display: none"/>
 			<input type="text" id="nako3_filename" placeholder="ファイル名" size="20"/>.txt →
-			<button onclick="nako3_savefile()">このファイル名で保存する</button><a id="nako3_save" href=""></a>
+			<button onclick="nako3_savefile()">▲このファイル名で保存する</button><a id="nako3_save" href=""></a>
 		</div>
-		<button onclick="nako3_savels(1)">LSに一時保存する</button>
-		<button onclick="nako3_clearls(1)">LSのプログラムを消去</button>
+		<div  class="btnarea3">
+			<button onclick="nako3_savels(1)">△LSに一時保存する</button>
+			<button onclick="nako3_clearls(1)">◇LSのプログラムを消去</button>
+		</div>
 	</div>
 	<hr />
 </div>
