@@ -176,15 +176,13 @@ const nako3_loadfile= function () {
 
 		const c = confirm( f.name + " を読み込んでいいですか？");
 		if (c) {
-			//nako3_clear(1);
 			const reader = new FileReader();
-
 			reader.addEventListener('load', (event) => {
 				editor.setValue( event.target.result, 1 );
-				nako3_clear(0);
+				nako3_clear(2);
 				nako3_print( f.name + " を読み込みました");
 				
-				// ファイル名をセット
+				// 「保存」のファイル名欄に、ファイル名をセット
 				var s = baseName( f.name );
 				var fn = document.getElementById("nako3_filename");
 				fn.value = s;
@@ -201,13 +199,13 @@ const nako3_loadsample= function () {
 	try {
 		// file select
 		const sel = document.getElementById("nako3_sample");
-		var f = sel.value;
-		if (!f) return;
+		var fname = sel.value;
+		if (!fname) return;
 		var s = sel.options[ sel.selectedIndex ].text;
 		
 		const c = confirm( s + " を読み込んでいいですか？");
 		if (c) {
-			fetch( f )
+			fetch( fname )
 				.then((data) => {
 					if (data.ok) {
 						return data.text();
@@ -221,7 +219,8 @@ const nako3_loadsample= function () {
 					nako3_print( s + " を読み込みました");
 				})
 				.catch(e => {
-					nako3_print(e);
+					// fetchできない場合
+					nako3_print("==ERROR==" + e + "");
 				});
 		}
 	} catch(e) {
@@ -232,9 +231,8 @@ const nako3_loadsample= function () {
 
 const nako3_loaddefault= function (editor) {
 	if (!editor) return;
-
 	try {
-		var f = "default.txt";
+		var f = "./default.txt";
 		var defs =	"クジラを絵追加。\n「こんにちは、クジラです。よろしくね。」と声出す。\n";
 		fetch( f )
 			.then((data) => {
@@ -247,7 +245,7 @@ const nako3_loaddefault= function (editor) {
 			.then((text) => {
 				editor.setValue( text, 1 );
 			})
-			.catch(e => {
+			.catch((e) => {
 				editor.setValue( defs , 1);
 			});
 	} catch(e) {
@@ -298,12 +296,9 @@ const nako3_getObjURL= function () {
 		const f = document.getElementById("load_media").files[0];
 		if (!f) return;
 
-		//const c = confirm( f.name + " を読み込んでいいですか？");
-		//if (c) {
-			objURL = URL.createObjectURL( f );
-			editor.insert("「" + objURL + "」");	// カーソル位置にObjectURLを挿入
-			editor.focus();
-		//}
+		objURL = URL.createObjectURL( f );
+		editor.insert("「" + objURL + "」");	// カーソル位置にObjectURLを挿入
+		editor.focus();
 	} catch(e) {
 		nako3_print(e);
 	}
@@ -316,23 +311,8 @@ const nako3_click_load_media = function () {
 	}
 }
 
-// メディアファイルのローカルパスを取得する
-const nako3_getFilepath= function () {
-	try {
-		// file select
-		//const f = document.getElementById("load_media2").files[0];
-		const f = document.getElementById("load_media2").files[0];
-		if (!f) return;
-
-		editor.insert("「" + f.name + "」");	// カーソル位置にURLを挿入
-		editor.focus();
-	} catch(e) {
-		nako3_print(e);
-	}
-}
-
-const nako3_click_load_localmedia = function () {
-	const fileElem = document.getElementById("load_media2");
+const nako3_click_loadfile = function () {
+	const fileElem = document.getElementById("nako3_file");
 	if (fileElem) {
 		fileElem.click();
 	}

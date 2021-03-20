@@ -8,7 +8,7 @@
 
 <body>
 <!-- なでしこ3のエンジンを取り込み -->
-<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.20&f=release/wnako3.js&run"></script>
+<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.21&f=release/wnako3.js&run"></script>
 <!-- プラグインを取り込み -->
 <script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_csv.js'></script>
 <script defer src='https://nadesi.com/v3/cdn.php?v=3.1.19&f=release/plugin_datetime.js'></script>
@@ -78,6 +78,17 @@ button {
 		padding: 0px 20px;
 	}
 }
+img {
+	max-width: 160px;
+	max-height: 160px
+}
+video {
+	max-width: 320px;
+	max-height: 320px
+}
+.btnarea {
+	background-color: #f0f0ff; padding:8px;
+}
 </style>
 <div class="flexbox">
 	<!-- エディタエリア -->
@@ -113,14 +124,12 @@ button {
 
 		<!-- ObjectURLの実装テスト -->
 		<input type="file" id="load_media" accept=".jpg,.jpeg,.png,.gif,.mp3,.mp4,.wav,.wmv" onChange="nako3_getObjURL()" style="display: none"/>
-		<input type="file" id="load_media2" accept=".jpg,.jpeg,.png,.gif,.mp3,.mp4,.wav,.wmv" onChange="nako3_getFilepath()" style="display: none"/>
 		<!-- エディタ側のサブメニュー -->
-		<div class="btnsub_flex">
-			<button onClick="nako3_click_load_media()">ObjectURLでファイル挿入</button>
-			<button onClick="nako3_click_load_localmedia()">メディアファイルを使う</button>
-		</div>
-		<div class="footer">
-			<a href="https://nadesi.com/v3/doc/index.php?%E5%91%BD%E4%BB%A4%E4%B8%80%E8%A6%A7%2F%E6%A9%9F%E8%83%BD%E9%A0%86&show" target="_blank" rel="noopener noreferrer">なでしこv3の命令一覧</a>（公式サイトへ）
+		<div class="btnsub_flex" style="padding:8px;">
+			<div class="footer">
+				<a href="https://nadesi.com/v3/doc/index.php?%E5%91%BD%E4%BB%A4%E4%B8%80%E8%A6%A7%2F%E6%A9%9F%E8%83%BD%E9%A0%86&show" target="_blank" rel="noopener noreferrer">なでしこv3の命令一覧</a>（公式サイトへ）
+			</div>
+			<button onClick="nako3_click_load_media()">メディアのObjectURLを得る</button>
 		</div>
 	</div>
 	
@@ -128,8 +137,8 @@ button {
 	<div class="sub">
 		<h3>■実行結果</h3>
 		<button onclick="nako3_run()">▶ 実行</button>
-		<button onclick="nako3_clear(1)">結果を消す</button>
-		<button onclick="nako3_break()">止める</button><hr />
+		<button onclick="nako3_break()">■止める</button>
+		<button onclick="nako3_clear(1)">★消す</button><hr />
 		<div id="nako3_retop"></div>
 		<!-- ERROR -->
 		<div id="nako3_error" class="nako3error" style="display: none"></div>
@@ -147,8 +156,10 @@ button {
 <!-- 機能ボタンエリア -->
 <div class="btnsub">
 	<hr />
+	<div>■プログラムを読み込むときは…</div>
 	<div class="btnsub_flex">
-		<select id="nako3_sample">
+		<div style="display:block" class="btnarea">
+		  <select id="nako3_sample">
 			<option value="">■お手本を選ぶ</option>
 			<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
 			<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
@@ -166,29 +177,31 @@ button {
 			<option value="./sample/sample-media-2audio.txt">音の扱い方</option>
 			<option value="./sample/sample-media-3movie.txt">動画の扱い方</option>
 			<option value="./sample/sample-media-4chart1.txt">線グラフ</option>
-		</select>
-		<button onclick="nako3_loadsample()">お手本読込</button>
+		  </select>→
+		  <button onclick="nako3_loadsample()">お手本読込</button>
+		</div>
+		<button onClick="nako3_click_loadfile()">保存したファイルを読み込む</button>
+		<button onclick="nako3_loadls()">LSから読み込む</button>
 	</div>
+
 	<hr />
-	<div>プログラムを一時保存…</div>
+	<div>■プログラムを保存するときは…</div>
 	<div class="btnsub_flex">
-		<button onclick="nako3_savels(1)">LSに一時保存</button>
-		<button onclick="nako3_loadls()">LSから読込</button>
-		<button onclick="nako3_clearls(1)">LSをクリア</button>
-	</div>
-	<hr />
-	<div style="display:block">
-		<div>ファイルから読込…<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()"/></div>
-		<div>ファイルに保存…<input type="text" id="nako3_filename" placeholder="ファイル名" size="20"/>.txt
-		<button onclick="nako3_savefile()">保存</button><a id="nako3_save" href=""></a></div>
+		<div style="display:block" class="btnarea">
+			<input type="file" id="nako3_file" accept=".txt" onChange="nako3_loadfile()" style="display: none"/>
+			<input type="text" id="nako3_filename" placeholder="ファイル名" size="20"/>.txt →
+			<button onclick="nako3_savefile()">このファイル名で保存する</button><a id="nako3_save" href=""></a>
+		</div>
+		<button onclick="nako3_savels(1)">LSに一時保存する</button>
+		<button onclick="nako3_clearls(1)">LSのプログラムを消去</button>
 	</div>
 	<hr />
 </div>
 
 <!-- footer -->
 <div class="footer">
-	<div>学習用なでしこパッド v1.2  (2021/3/20)</div>
-	<div>※<a href="https://nadesi.com/" target="_blank" rel="noopener noreferrer">日本語プログラミング言語「なでしこ」 v3.1.19</a> を利用しています。</div>
+	<div>学習用なでしこパッド v1.21  (2021/3/20)</div>
+	<div>※<a href="https://nadesi.com/" target="_blank" rel="noopener noreferrer">日本語プログラミング言語「なでしこ」 v3.1.21</a> を利用しています。</div>
 	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank" rel="noopener noreferrer">フリー音楽素材/魔王魂</a>のものを使用しています。</div>
 	<div>※画像素材は，なでしこv1に同梱のもの を使用しています。</div>
 </div>
