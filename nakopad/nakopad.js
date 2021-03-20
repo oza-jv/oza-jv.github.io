@@ -360,8 +360,34 @@ function nako3_break() {
 	speechSynthesis.cancel();
 }
 
-// 初期
-nako3_loaddefault();
-nako3_clear(2);
-nako3_canvas_off();
+// サンプルプログラムのオプションをこちらで定義 21.3.21
+const SAMPLE_LIST = [
+	{ value: './sample/sample-omikuji-1.txt', name: 'おみくじ１　もし～ならば' },
+	{ value: './sample/sample-omikuji-2.txt', name: 'おみくじ２　もし～ならば～違えば' },
+	{ value: './sample/sample-omikuji-3.txt', name: 'おみくじ３　もし～ならば～違えばもし' },
+	{ value: '', name: '--' },
+	{ value: './sample/sample-kazuate-1.txt', name: '数当てゲーム１　乱数と分岐' },
+	{ value: './sample/sample-kazuate-2.txt', name: '数当てゲーム２　反復' },
+	{ value: './sample/sample-kazuate-3.txt', name: '数当てゲーム３　ヒントを加える' },
+	{ value: './sample/sample-kazuate-4.txt', name: '数当てゲーム４　フラグ変数を使う' },
+	{ value: './sample/sample-kazuate.txt',   name: '数当てゲーム 豪華版' },
+	{ value: '', name: '--' },
+	{ value: './sample/sample-click10sec.txt', name: 'マウスクリック練習　１０秒ゲーム' }
+];
 
+const nako3_init_samplelist = function () {
+	var select = document.getElementById( "nako3_sample" )
+	if (!select) return
+	
+	let optionstr = '<option value="">■お手本を選ぶ</option>';
+	SAMPLE_LIST.forEach((item) => {
+		optionstr += '<option value="' + item.value + '">' + item.name + '</option>';
+	});
+	select.innerHTML = optionstr;
+}
+
+// プログラムを消すボタンを設置 21.3.21
+const nako3_clear_edit = function () {
+	editor.setValue('');
+	editor.focus();
+}

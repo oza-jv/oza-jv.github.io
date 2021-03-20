@@ -90,10 +90,10 @@ video {
 	background-color: #f0f0ff; padding:8px;
 }
 .btnarea2 {
-	background-color: #80ff80; padding:8px;
+	background-color: #ffffe0; padding:8px;
 }
 .btnarea3 {
-	background-color: #ff8080; padding:8px;
+	background-color: #e0ffff; padding:8px;
 }
 
 </style>
@@ -112,7 +112,6 @@ video {
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 		<script type="text/javascript" src="./nakopad.js"></script>
 		<script>
-		
 			// ace.js init
 			var editor = ace.edit("editor");
 			editor.setTheme("ace/theme/eclipse");
@@ -122,11 +121,6 @@ video {
 			editor.getSession().setUseWrapMode(false);
 			editor.getSession().setTabSize(2);
 			editor.setOption("showInvisibles", false)
-
-			// 初期
-			nako3_loaddefault(editor);
-			nako3_clear(2);
-			nako3_canvas_off();
 		</script>
 
 		<!-- ObjectURLの実装テスト -->
@@ -136,7 +130,8 @@ video {
 			<div class="footer">
 				<a href="https://nadesi.com/v3/doc/index.php?%E5%91%BD%E4%BB%A4%E4%B8%80%E8%A6%A7%2F%E6%A9%9F%E8%83%BD%E9%A0%86&show" target="_blank" rel="noopener noreferrer">なでしこv3の命令一覧</a>（公式サイトへ）
 			</div>
-			<button onClick="nako3_click_load_media()">メディアのObjectURLを得る</button>
+			<button onclick="nako3_clear_edit()">◆プログラムを消す</button>
+			<button onClick="nako3_click_load_media()">メディアのURL</button>
 		</div>
 	</div>
 	
@@ -166,25 +161,7 @@ video {
 	<div>■プログラムを読み込むときは…</div>
 	<div class="btnsub_flex">
 		<div style="display:block" class="btnarea">
-		  <select id="nako3_sample">
-			<option value="">■お手本を選ぶ</option>
-			<option value="./sample/sample-omikuji-1.txt">おみくじ１　もし～ならば</option>
-			<option value="./sample/sample-omikuji-2.txt">おみくじ２　もし～ならば～違えば</option>
-			<option value="./sample/sample-omikuji-3.txt">おみくじ３　もし～ならば～違えばもし</option>
-			<option value="">---</option>
-			<option value="./sample/sample-kazuate-1.txt">数当てゲーム１　乱数と分岐</option>
-			<option value="./sample/sample-kazuate-2.txt">数当てゲーム２　反復</option>
-			<option value="./sample/sample-kazuate-3.txt">数当てゲーム３　ヒントを加える</option>
-			<option value="./sample/sample-kazuate-4.txt">数当てゲーム４　フラグ変数を使う</option>
-			<option value="./sample/sample-kazuate.txt">数当てゲーム 豪華版</option>
-			<option value="">---</option>
-			<option value="./sample/sample-click10sec.txt">マウスクリック練習　１０秒ゲーム</option>
-			<option value="">---</option>
-			<option value="./sample/sample-media-1pic.txt">画像の扱い方</option>
-			<option value="./sample/sample-media-2audio.txt">音の扱い方</option>
-			<option value="./sample/sample-media-3movie.txt">動画の扱い方</option>
-			<option value="./sample/sample-media-4chart1.txt">線グラフ</option>
-		  </select>→
+		  <select id="nako3_sample"></select>→
 		  <button onclick="nako3_loadsample()">お手本読込</button>
 		</div>
 		<div  class="btnarea2"><button onClick="nako3_click_loadfile()">▼保存したファイルを読み込む</button></div>
@@ -214,4 +191,12 @@ video {
 	<div>※音素材は，<a href="" title="フリー音楽素材/魔王魂" target="_blank" rel="noopener noreferrer">フリー音楽素材/魔王魂</a>のものを使用しています。</div>
 	<div>※画像素材は，なでしこv1に同梱のもの を使用しています。</div>
 </div>
+
+<script>
+	// 初期化
+	nako3_loaddefault(editor);
+	nako3_clear(2);
+	nako3_canvas_off();
+	nako3_init_samplelist();
+</script>
 <body></html>
