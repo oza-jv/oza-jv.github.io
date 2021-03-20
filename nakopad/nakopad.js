@@ -25,6 +25,7 @@ function nako3_run() {
 		//editor.editorMarkers.addByError(code, e)
 		//console.log(e)
 	}
+	editor.focus();
 }
 
 const nako3_print = function (s) {
@@ -126,6 +127,7 @@ const nako3_loadls = function () {
 	} catch(e) {
 		nako3_print(e);
 	}
+	editor.focus();
 }
 
 const nako3_savels = function (flag) {
@@ -192,6 +194,7 @@ const nako3_loadfile= function () {
 	} catch(e) {
 		nako3_print(e);
 	}
+	editor.focus();
 }
 
 const nako3_loadsample= function () {
@@ -224,6 +227,7 @@ const nako3_loadsample= function () {
 	} catch(e) {
 		nako3_print(e);
 	}
+	editor.focus();
 }
 
 const nako3_loaddefault= function (editor) {
@@ -249,6 +253,7 @@ const nako3_loaddefault= function (editor) {
 	} catch(e) {
 		editor.setValue( defs , 1);
 	}
+	editor.focus();
 }
 
 const nako3_savefile= function () {
@@ -280,6 +285,7 @@ const nako3_savefile= function () {
 		a.click();
 		
 		nako3_print( "プログラムを保存しました。保存したファイルは，ダウンロードフォルダにあります。" );
+		editor.focus();
 	} catch(e) {
 		nako3_print(e);
 	}
@@ -296,6 +302,7 @@ const nako3_getObjURL= function () {
 		//if (c) {
 			objURL = URL.createObjectURL( f );
 			editor.insert("「" + objURL + "」");	// カーソル位置にObjectURLを挿入
+			editor.focus();
 		//}
 	} catch(e) {
 		nako3_print(e);
@@ -318,6 +325,7 @@ const nako3_getFilepath= function () {
 		if (!f) return;
 
 		editor.insert("「" + f.name + "」");	// カーソル位置にURLを挿入
+		editor.focus();
 	} catch(e) {
 		nako3_print(e);
 	}

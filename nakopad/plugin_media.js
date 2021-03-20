@@ -181,6 +181,7 @@ const PluginMedia = {
         };
         const video = document.createElement('video');
         video.src = aSrc;
+        video.classList.add('media');
         video.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
         video.width = '320';
         video.controls = false;
