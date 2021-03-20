@@ -1,5 +1,6 @@
 /**
  * なでしこ3 追加プラグイン 2020/12/19  v1.2
+ *                          2021/ 3/20  v1.3 audioタグ関係を修正
  * file : plugin_media.js
  * 音声，静止画，動画を表示・再生するためのプラグイン
  * ローカルのファイルも扱える
@@ -70,6 +71,7 @@ const PluginMedia = {
   
   '音追加': { // @audio要素を追加して，aSrcファイルを読み込む // @オトツイカ
     // aIDを指定するとそれを親要素とする。省略するとbodyの子要素として追加。
+    //                            21.3.20 省略するとdefault親要素の子要素として追加 に変更
     // 生成されたid名を返します。
     type: 'func',
     josi: [['を'],['へ', 'に']],
@@ -78,12 +80,14 @@ const PluginMedia = {
     fn: function (aSrc, ...pID) {
       try {
         const sys = pID.pop();
-        var parent = document.body;
+        // var parent = document.body;
+        var parent = sys.__v0['DOM親要素'];
         if ( pID.length > 0 ) {
           parent = document.querySelector("#" + pID[0]);
         };
         const audio = document.createElement('audio');
         audio.src = aSrc;
+        audio.classList.add('media');
         audio.id = 'nadesi-dom-' + sys.__v0['DOM生成個数'];
         parent.appendChild(audio);
         sys.__v0['DOM生成個数']++;

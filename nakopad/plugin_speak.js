@@ -8,9 +8,11 @@ const PluginSpeak = {
     type: 'func',
     josi: [['と', 'を']],
     fn: function (text, sys) {
-        speechSynthesis.cancel()
+        speechSynthesis.cancel();
         const uttr = new SpeechSynthesisUtterance(text);
-        speechSynthesis.speak(uttr);
+        setTimeout(() => {
+        	speechSynthesis.speak(uttr);
+        }, 500);
         console.log("#声出: " + text);
     }
   },
