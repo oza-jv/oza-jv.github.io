@@ -372,7 +372,10 @@ const SAMPLE_LIST = [
 	{ value: './sample/sample-kazuate-4.txt', name: '数当てゲーム４　フラグ変数を使う' },
 	{ value: './sample/sample-kazuate.txt',   name: '数当てゲーム 豪華版' },
 	{ value: '', name: '--' },
-	{ value: './sample/sample-click10sec.txt', name: 'マウスクリック練習　１０秒ゲーム' }
+	{ value: './sample/sample-click10sec.txt', name: 'マウスクリック練習　１０秒ゲーム' },
+	{ value: '', name: '--' },
+	{ value: './sample/kensyu-01zipcode.txt', name: '双方向１　郵便番号取得' },
+	{ value: './sample/kensyu-02tenki.txt',   name: '双方向２　天気予報取得' }
 ];
 
 const nako3_init_samplelist = function () {
