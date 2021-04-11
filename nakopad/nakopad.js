@@ -360,7 +360,7 @@ function nako3_break() {
 	speechSynthesis.cancel();
 }
 
-// サンプルプログラムのオプションをこちらで定義 21.3.21
+// サンプルプログラムのオプションをこちらで定義 21.3.21  4/11追加
 const SAMPLE_LIST = [
 	{ value: './sample/sample-omikuji-1.txt', name: 'おみくじ１　もし～ならば' },
 	{ value: './sample/sample-omikuji-2.txt', name: 'おみくじ２　もし～ならば～違えば' },
@@ -372,7 +372,8 @@ const SAMPLE_LIST = [
 	{ value: './sample/sample-kazuate-4.txt', name: '数当てゲーム４　フラグ変数を使う' },
 	{ value: './sample/sample-kazuate.txt',   name: '数当てゲーム 豪華版' },
 	{ value: '', name: '--' },
-	{ value: './sample/sample-click10sec.txt', name: 'マウスクリック練習　１０秒ゲーム' },
+	{ value: './sample/sample-click10sec.txt', name: 'マウス練習　１０秒ゲーム' },
+	{ value: './sample/sample-timer-1.txt',    name: '簡易タイマー' },
 	{ value: '', name: '--' },
 	{ value: './sample/kensyu-01zipcode.txt', name: '双方向１　郵便番号取得' },
 	{ value: './sample/kensyu-02tenki.txt',   name: '双方向２　天気予報取得' }
