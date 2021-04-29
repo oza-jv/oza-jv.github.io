@@ -383,9 +383,10 @@ const SAMPLE_LIST = [
 	{ value: './sample/sample-click10sec.txt', name: 'マウス練習 １０秒ゲーム' },
 	{ value: './sample/sample-timer-1.txt',    name: '簡易タイマー' },
 	{ value: '', name: '--' },
-	{ value: './sample/sample-net01-zipcode.txt', name: '双方向1 郵便番号取得' },
-	{ value: './sample/sample-net02-tenki.txt',   name: '双方向2 天気予報取得' },
-	{ value: './sample/sample-net03-pcr.txt',     name: '双方向3 PCR陽性者数取得' }
+	{ value: './sample/sample-net01-zipcode.txt',  name: '双方向1 郵便番号取得' },
+	{ value: './sample/sample-net02-tenki.txt',    name: '双方向2 天気予報取得(1)' },
+	{ value: './sample/sample-net03-pcr.txt',      name: '双方向3 PCR陽性者数取得' },
+	{ value: './sample/sample-net04-weather2.txt', name: '双方向4 天気予報取得(2)' }
 ];
 
 const nako3_init_samplelist = function () {
