@@ -239,7 +239,7 @@ const nako3_loaddefault= function (editor) {
 		if( fd.load === null ) {
 			var f = "./default.txt";
 		} else {
-			var f = "./" + fd.load;
+			var f = "./sample/" + fd.load;
 		}
 		var defs =	"クジラを絵追加。\n「こんにちは、クジラです。よろしくね。」と声出す。\n";
 		fetch( f )
