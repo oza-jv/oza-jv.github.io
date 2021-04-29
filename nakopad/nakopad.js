@@ -370,22 +370,22 @@ function nako3_break() {
 
 // サンプルプログラムのオプションをこちらで定義 21.3.21  4/11追加
 const SAMPLE_LIST = [
-	{ value: './sample/sample-omikuji-1.txt', name: 'おみくじ１　もし～ならば' },
-	{ value: './sample/sample-omikuji-2.txt', name: 'おみくじ２　もし～ならば～違えば' },
-	{ value: './sample/sample-omikuji-3.txt', name: 'おみくじ３　もし～ならば～違えばもし' },
+	{ value: './sample/sample-omikuji-1.txt', name: 'おみくじ1 もし～ならば' },
+	{ value: './sample/sample-omikuji-2.txt', name: 'おみくじ2 もし～ならば～違えば' },
+	{ value: './sample/sample-omikuji-3.txt', name: 'おみくじ3 もし～ならば～違えばもし' },
 	{ value: '', name: '--' },
-	{ value: './sample/sample-kazuate-1.txt', name: '数当てゲーム１　乱数と分岐' },
-	{ value: './sample/sample-kazuate-2.txt', name: '数当てゲーム２　反復' },
-	{ value: './sample/sample-kazuate-3.txt', name: '数当てゲーム３　ヒントを加える' },
-	{ value: './sample/sample-kazuate-4.txt', name: '数当てゲーム４　フラグ変数を使う' },
+	{ value: './sample/sample-kazuate-1.txt', name: '数当て1 乱数と分岐' },
+	{ value: './sample/sample-kazuate-2.txt', name: '数当て2 反復' },
+	{ value: './sample/sample-kazuate-3.txt', name: '数当て3 ヒントを加える' },
+	{ value: './sample/sample-kazuate-4.txt', name: '数当て4 フラグ変数を使う' },
 	{ value: './sample/sample-kazuate.txt',   name: '数当てゲーム 豪華版' },
 	{ value: '', name: '--' },
-	{ value: './sample/sample-click10sec.txt', name: 'マウス練習　１０秒ゲーム' },
+	{ value: './sample/sample-click10sec.txt', name: 'マウス練習 １０秒ゲーム' },
 	{ value: './sample/sample-timer-1.txt',    name: '簡易タイマー' },
 	{ value: '', name: '--' },
-	{ value: './sample/kensyu-01zipcode.txt', name: '双方向1　郵便番号取得' },
-	{ value: './sample/kensyu-02tenki.txt',   name: '双方向2　天気予報取得' },
-	{ value: './sample/sample-03pcr.txt',     name: '双方向3　PCR陽性者数取得' }
+	{ value: './sample/sample-net01-zipcode.txt', name: '双方向1 郵便番号取得' },
+	{ value: './sample/sample-net02-tenki.txt',   name: '双方向2 天気予報取得' },
+	{ value: './sample/sample-net03-pcr.txt',     name: '双方向3 PCR陽性者数取得' }
 ];
 
 const nako3_init_samplelist = function () {

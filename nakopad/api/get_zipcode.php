@@ -6,7 +6,7 @@
 	$result = file_get_contents('http://zip.cgis.biz/xml/zip.php?zn='.$_GET['zip']);
 
 	$x = simplexml_load_string( $result );
-	print_r( $x );
+	//print_r( $x );
 	
 	if( $x !== false ) {
 		if( !is_null($x->ADDRESS_value) ) {
