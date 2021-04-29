@@ -1,6 +1,5 @@
 // nadesiko init
 const LSKEY = "nakoedit";	// ローカルストレージの保存キー
-const params = location.href;
 
 function nako3_run() {
 	if (typeof(navigator.nako3) === 'undefined' || editor === undefined) {
@@ -432,15 +431,4 @@ function key_event() {
 			break;
 	}
 	return;
-}
-
-// index.htmlのパラメータを取得 2021.4.30
-function nako3_getParams( params ) {
-	const regex = /[?&]([^=#]+)=([^&#]*)/g;
-	const params_obj = {};
-	let match;
-	while(match = regex.exec(params)){
-		params_obj[match[1]] = match[2];
-	}
-	return params_obj;
 }
