@@ -235,11 +235,12 @@ const nako3_loaddefault= function (editor) {
 	if (!editor) return;
 	try {
 		// パラメータがあればそれを読み込む 2021.4.30
-		var fd = nako3_getParams( params );
-		if( fd.load === null ) {
+		var params = (new URL( document.location )).searchParams;
+		var fd = params.get('load');
+		if( fd === null ) {
 			var f = "./default.txt";
 		} else {
-			var f = "./sample/" + fd.load;
+			var f = "./sample/" + fd;
 		}
 		var defs =	"クジラを絵追加。\n「こんにちは、クジラです。よろしくね。」と声出す。\n";
 		fetch( f )
