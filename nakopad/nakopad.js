@@ -1,5 +1,6 @@
 // nadesiko init
 const LSKEY = "nakoedit";	// ローカルストレージの保存キー
+const params = location.href;
 
 function nako3_run() {
 	if (typeof(navigator.nako3) === 'undefined' || editor === undefined) {
@@ -233,7 +234,13 @@ const nako3_loadsample= function () {
 const nako3_loaddefault= function (editor) {
 	if (!editor) return;
 	try {
-		var f = "./default.txt";
+		// パラメータがあればそれを読み込む 2021.4.30
+		var fd = nako3_getParams( params );
+		if( fd.load === null ) {
+			var f = "./default.txt";
+		} else {
+			var f = "./" + fd.load;
+		}
 		var defs =	"クジラを絵追加。\n「こんにちは、クジラです。よろしくね。」と声出す。\n";
 		fetch( f )
 			.then((data) => {
@@ -376,8 +383,9 @@ const SAMPLE_LIST = [
 	{ value: './sample/sample-click10sec.txt', name: 'マウス練習　１０秒ゲーム' },
 	{ value: './sample/sample-timer-1.txt',    name: '簡易タイマー' },
 	{ value: '', name: '--' },
-	{ value: './sample/kensyu-01zipcode.txt', name: '双方向１　郵便番号取得' },
-	{ value: './sample/kensyu-02tenki.txt',   name: '双方向２　天気予報取得' }
+	{ value: './sample/kensyu-01zipcode.txt', name: '双方向1　郵便番号取得' },
+	{ value: './sample/kensyu-02tenki.txt',   name: '双方向2　天気予報取得' },
+	{ value: './sample/sample-03pcr.txt',     name: '双方向3　PCR陽性者数取得' }
 ];
 
 const nako3_init_samplelist = function () {
@@ -423,4 +431,15 @@ function key_event() {
 			break;
 	}
 	return;
+}
+
+// index.htmlのパラメータを取得 2021.4.30
+function nako3_getParams( params ) {
+	const regex = /[?&]([^=#]+)=([^&#]*)/g;
+	const params_obj = {};
+	let match;
+	while(match = regex.exec(params)){
+		params_obj[match[1]] = match[2];
+	}
+	return params_obj;
 }
