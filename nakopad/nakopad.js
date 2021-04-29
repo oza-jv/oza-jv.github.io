@@ -237,7 +237,7 @@ const nako3_loaddefault= function (editor) {
 		// パラメータがあればそれを読み込む 2021.4.30
 		var params = (new URL( document.location )).searchParams;
 		var fd = params.get('load');
-		if( fd === null ) {
+		if( fd === undefined ) {
 			var f = "./default.txt";
 		} else {
 			var f = "./sample/" + fd;
