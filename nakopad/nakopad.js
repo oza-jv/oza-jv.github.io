@@ -12,7 +12,7 @@ function nako3_run() {
 	var addon =
 		"「" + div_name + "」へDOM親要素設定;" +
 		"「" + div_name + "」に「」をHTML設定;" +
-		"「" + canvas_name + "」へ描画開始;"
+		"「" + canvas_name + "」へ描画開始;\n"
 	const preCode = addon
 	try {
 		nako3_clear(2)
@@ -25,6 +25,7 @@ function nako3_run() {
 		//editor.editorMarkers.addByError(code, e)
 		//console.log(e)
 	}
+	
 	editor.focus();
 }
 
@@ -394,4 +395,32 @@ const nako3_init_samplelist = function () {
 const nako3_clear_edit = function () {
 	editor.setValue('');
 	editor.focus();
+}
+
+// ファンクションキーで機能実行できるよう追加 2021.4.30
+document.onkeydown = key_event;
+function key_event() {
+	// F1-F12キーならば，イベントを無効化する
+	if( event.keyCode >=112 && event.keyCode <= 123 ) {
+		event.keyCode = null;
+		event.returnValue = false;
+	}
+
+	switch( event.keyCode ) {
+		// F4キー LS保存
+		case 115:
+			nako3_savels(1);
+			break;
+		// F9キー 実行
+		case 120:
+			nako3_run();
+			break;
+		// F10キー 停止
+		case 121:
+			nako3_break();
+			break;
+		default:
+			break;
+	}
+	return;
 }

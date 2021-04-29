@@ -24,7 +24,8 @@ const PluginHyouji = {
   '黒クジラ': { type: 'const', value: './img/kujira-bk.png' },
   'ピンポン': { type: 'const', value: './audio/se_maoudamashii_chime13.mp3' },
   'ブブー': { type: 'const', value: './audio/se_maoudamashii_onepoint32.mp3' },
-  '発車ベル': { type: 'const', value: './audio/se_maoudamashii_jingle03.mp3' }
+  '発車ベル': { type: 'const', value: './audio/se_maoudamashii_jingle03.mp3' },
+  '陽性者数API': { type: 'const', value: './api/get_pcr_positive_daily.php' }
 }
 
 // モジュールのエクスポート(必ず必要)

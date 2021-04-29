@@ -13,7 +13,7 @@ const PluginSpeak = {
         setTimeout(() => {
         	speechSynthesis.speak(uttr);
         }, 500);
-        console.log("#声出: " + text);
+        //console.log("#声出: " + text);
     }
   },
   
@@ -22,7 +22,7 @@ const PluginSpeak = {
     josi: [[]],
     fn: function (text, sys) {
         speechSynthesis.cancel()
-        console.log("#声止: " + text);
+        //console.log("#声止: " + text);
     }
   }
 }
