@@ -17,20 +17,14 @@ function nako3_run() {
 	try {
 		nako3_clear(2)
 		navigator.nako3.runReset(preCode + code, "main.nako3", preCode)
-		//scr_to_id( "nako3_result" );
-		scr_to_id( "nako3_retop" );
-		//console.log("DONE")
+		nako3_scr();
 	} catch (e) {
 		nako3_print("==ERROR==" + e.message + "")
-		//editor.editorMarkers.addByError(code, e)
-		//console.log(e)
+		nako3_scr();
 	}
-	
-	editor.focus();
 }
 
 const nako3_print = function (s) {
-	//console.log("[表示] " + s)
 	var info = document.getElementById("nako3_info")
 	if (!info) return
 	var err = document.getElementById("nako3_error")
@@ -46,16 +40,13 @@ const nako3_print = function (s) {
 		err.style.display = 'block'
 		info.style.display = 'none'
 		audio.src = './audio/se_maoudamashii_system18.mp3';
-		//scr_to_id( "nako3_error" );
-		scr_to_id( "nako3_retop" );
 	} else {
 		info.innerHTML = to_html(s);
 		info.style.display = 'block'
 		err.style.display = 'none'
 		audio.src = './audio/se_maoudamashii_system13.mp3';
-		//scr_to_id( "nako3_info" );
-		scr_to_id( "nako3_retop" );
 	}
+	nako3_scr();
 
 	// エラー音
 	audio.currentTime = 0;
@@ -121,12 +112,12 @@ const nako3_loadls = function () {
 				s = "" + s;
 				editor.setValue(s, 1);
 				nako3_print("ローカルストレージに保存されているプログラムを読み込みました");
+				nako3_scrtop();
 			}
 		}
 	} catch(e) {
 		nako3_print(e);
 	}
-	editor.focus();
 }
 
 const nako3_savels = function (flag) {
@@ -180,6 +171,7 @@ const nako3_loadfile= function () {
 				editor.setValue( event.target.result, 1 );
 				nako3_clear(2);
 				nako3_print( f.name + " を読み込みました");
+				nako3_scrtop();
 				
 				// 「保存」のファイル名欄に、ファイル名をセット
 				var s = baseName( f.name );
@@ -191,7 +183,6 @@ const nako3_loadfile= function () {
 	} catch(e) {
 		nako3_print(e);
 	}
-	editor.focus();
 }
 
 const nako3_loadsample= function () {
@@ -216,6 +207,7 @@ const nako3_loadsample= function () {
 					editor.setValue( text, 1 );
 					nako3_clear(1);
 					nako3_print( s + " を読み込みました");
+					nako3_scrtop();
 				})
 				.catch(e => {
 					// fetchできない場合
@@ -225,13 +217,12 @@ const nako3_loadsample= function () {
 	} catch(e) {
 		nako3_print(e);
 	}
-	editor.focus();
 }
 
 const nako3_loaddefault= function (editor) {
 	if (!editor) return;
 	try {
-		// パラメータがあればそれを読み込む 2021.4.30
+		// パラメータでファイル名を指定したらsanpleフォルダ内から読み込む 2021.4.30
 		var params = (new URL( document.location )).searchParams;
 		var fd = params.get('load');
 		if( fd === undefined ) {
@@ -257,7 +248,7 @@ const nako3_loaddefault= function (editor) {
 	} catch(e) {
 		editor.setValue( defs , 1);
 	}
-	editor.focus();
+	nako3_scrtop();
 }
 
 const nako3_savefile= function () {
@@ -289,7 +280,7 @@ const nako3_savefile= function () {
 		a.click();
 		
 		nako3_print( "プログラムを保存しました。保存したファイルは，ダウンロードフォルダにあります。" );
-		editor.focus();
+		//editor.focus();
 	} catch(e) {
 		nako3_print(e);
 	}
@@ -430,4 +421,18 @@ function key_event() {
 			break;
 	}
 	return;
+}
+
+// スクロール処理の改善　2021.5.2
+// 実行結果やinfoへスクロールする
+function nako3_scr() {
+	editor.focus();
+	scr_to_id( "nako3_retop" );
+}
+
+// プログラムをロードした後に最上部へ戻す
+function nako3_scrtop() {
+	window.scroll( 0, 0 );
+	editor.focus();
+	editor.gotoLine(1);
 }
