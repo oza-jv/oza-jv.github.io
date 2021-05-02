@@ -73,10 +73,8 @@ function scr_to_id( id ) {
 	var el = document.getElementById( id );
 	if (!el) return;
 	var rect = el.getBoundingClientRect();
-	
 	var elemtop = rect.top + window.pageYOffset;
-	if( elemtop < 200 ) elemtop = 0;
-	document.documentElement.scrollTop = elemtop;
+	window.scroll( 0, elemtop );
 }
 
 const nako3_clear = function (s) {
