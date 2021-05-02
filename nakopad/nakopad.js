@@ -241,14 +241,16 @@ const nako3_loaddefault= function (editor) {
 			})
 			.then((text) => {
 				editor.setValue( text, 1 );
+				nako3_scrtop();
 			})
 			.catch((e) => {
 				editor.setValue( defs , 1);
+				nako3_scrtop();
 			});
 	} catch(e) {
 		editor.setValue( defs , 1);
+		nako3_scrtop();
 	}
-	nako3_scrtop();
 }
 
 const nako3_savefile= function () {
@@ -426,13 +428,19 @@ function key_event() {
 // スクロール処理の改善　2021.5.2
 // 実行結果やinfoへスクロールする
 function nako3_scr() {
-	editor.focus();
+	// UserAgentからのスマホ判定
+	if (!(navigator.userAgent.match(/iPhone|Android.+Mobile/))) {
+		editor.focus();
+	}
 	scr_to_id( "nako3_retop" );
 }
 
 // プログラムをロードした後に最上部へ戻す
 function nako3_scrtop() {
 	window.scroll( 0, 0 );
-	editor.focus();
-	editor.gotoLine(1);
+	// UserAgentからのスマホ判定
+	if (!(navigator.userAgent.match(/iPhone|Android.+Mobile/))) {
+		editor.focus();
+		editor.gotoLine(1);
+	}
 }
