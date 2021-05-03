@@ -16,8 +16,11 @@
 -->
 <button id="requestDeviceButton">request device</button>
 <button id="openButton">open device</button>
+<button id="closeButton">close device</button>
 <button id="beepButton">beep</button>
-<button id="ledButton">led</button>
+<button id="ledButton">LEDオン</button>
+<button id="sensor1Button">センサ1測定</button>
+<button id="out1Button">出力1</button>
 
 <!-- なでしこ3のエンジンを取り込み -->
 <script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
@@ -38,9 +41,19 @@
 
 <script type="text/javascript">
 let outputReportId = 0;
-//let outputReport = new Uint8Array([65]);
 let device;
+var ADval = 0;
+var USBconnected = 0;	// 処理可＝1，不可＝０
+var outputReport = new Uint8Array(64);
+const filters = [
+  {
+    // なでしこボードのHIDフィルタ
+    vendorId: 0x3289,
+    productId: 0x2001
+  }
+];
 
+// HID APIを使えるか
 if(!("hid" in navigator)) {
     console.log('HID NG');
 } else {
@@ -60,17 +73,35 @@ navigator.hid.getDevices().then(devices => {
 	console.log(`Now press "open device" button to receive input reports.`);
 });
 
+// 接続と切断に対するイベントリスナー登録
+navigator.hid.addEventListener('connect', ({device}) => {
+	console.log(`HID connected: ${device.productName}`);
+});
+
+navigator.hid.addEventListener('disconnect', ({device}) => {
+	console.log(`HID disconnected: ${device.productName}`);
+});
+
+const waitFor = duration => new Promise(r => setTimeout(r, duration));
+
+
+/*----------------------------------------------------------*/
+// 接続状態をUSBconnectedに格納
+function ChkHIDItem() {
+	if (!device)  {
+		USBconnected = -1;			// 未接続
+	} else if( device.opened ) {
+		USBconnected = 1;			// 接続＆オープン完了
+	} else {
+		USBconnected = 0;			// 接続したが未オープン
+	}
+	
+}
+
+/*----------------------------------------------------------*/
 // 接続ボタンを押した時　デバイスを要求
 requestDeviceButton.onclick = async event => {
 	try {
-		const filters = [
-		  {
-		    // なでしこボードのHIDフィルタ
-		    vendorId: 0x3289,
-		    productId: 0x2001
-		  }
-		];
-		
 		[device] = await navigator.hid.requestDevice({ filters });
 		if (!device) return;
 		
@@ -88,68 +119,111 @@ openButton.onclick = async event => {
 
 	await device.open();
 	device.addEventListener("inputreport", handleInputReport);
-	console.log(`${device.productName} open: ${device.opened}`);
+	console.log(`${device.productName} opened: ${device.opened}`);
+	console.log( device );
 };
 
-// 接続と切断に対するイベントリスナー登録
-navigator.hid.addEventListener('connect', ({device}) => {
-	console.log(`HID connected: ${device.productName}`);
-});
+// デバイスを閉じる時
+closeButton.onclick = async event => {
+	if (!device) return;
 
-navigator.hid.addEventListener('disconnect', ({device}) => {
-	console.log(`HID disconnected: ${device.productName}`);
-});
+	await device.close();
+	console.log(`${device.productName} opened: ${device.opened}`);
+};
 
+// ボード側から受信したときのイベント
 function handleInputReport(e) {
-  console.log(e.device.productName + ": got input report " + e.reportId);
-  console.log(new Uint8Array(e.data.buffer));
-  //console.log(new TextDecoder().decode(e.data.buffer));
+	const { data, device, reportId } = e;
+	
+	//console.log(e.device.productName + ": got input report " + reportId);
+	//console.log(new Uint8Array(data.buffer));
+	
+	// 測定値
+	ADval = data.getUint8(2);
+	ADval = (ADval << 8) | data.getUint8(1);
+	console.log( ADval );
 }
 
-
-const waitFor = duration => new Promise(r => setTimeout(r, duration));
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 // beepボタンを押した時
 beepButton.onclick = async event => {
-	if (!device) return;
-	const outputReport = new Uint8Array(64);
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		note = getRandomInt(23);
 
-	// beep
-	outputReport[0] = 'P'.charCodeAt(0);
-	outputReport[1] = 10;
-	await device.sendReport(outputReportId, outputReport);
-	console.log("beep on");
+		// beep
+		outputReport[0] = 'P'.charCodeAt(0);
+		outputReport[1] = note;
+		await device.sendReport(outputReportId, outputReport);
+		console.log(`beep on  note:${note}`);
 
-	await waitFor(1000);
+		await waitFor(500);
 
-	// beep
-	outputReport[0] = 'P'.charCodeAt(0);
-	outputReport[1] = 23;
-	await device.sendReport(outputReportId, outputReport);
-	console.log("beep off");
-
+		// beep
+		outputReport[0] = 'P'.charCodeAt(0);
+		outputReport[1] = 23;
+		await device.sendReport(outputReportId, outputReport);
+		console.log("beep off");
+	}
 };
 
 // ledボタンを押した時
 ledButton.onclick = async event => {
-	if (!device) return;
-	const outputReport = new Uint8Array(64);
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		// turn on
+		outputReport[0] = 'O'.charCodeAt(0);
+		outputReport[1] = 0;
+		outputReport[2] = 1;
+		await device.sendReport(outputReportId, outputReport);
+		console.log("led on");
 
-	// turn on
-	outputReport[0] = 'O'.charCodeAt(0);
-	outputReport[1] = 0;
-	outputReport[2] = 1;
-	await device.sendReport(outputReportId, outputReport);
-	console.log("led on");
+		await waitFor(1000);
 
-	await waitFor(1000);
-
-	// turn off
-	outputReport[2] = 0;
-	await device.sendReport(outputReportId, outputReport);
-	console.log("led off");
-
+		// turn off
+		outputReport[2] = 0;
+		await device.sendReport(outputReportId, outputReport);
+		console.log("led off");
+	}
 };
+
+// センサ１ボタンを押した時
+sensor1Button.onclick = async event => {
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		// turn on
+		outputReport[0] = 'A'.charCodeAt(0);
+		await device.sendReport(outputReportId, outputReport);
+		console.log("sensor1");
+		await waitFor(100);
+		console.log(`ADval: ${ADval}`);
+	}
+};
+
+// out1ボタンを押した時
+out1Button.onclick = async event => {
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		// turn on
+		outputReport[0] = 'O'.charCodeAt(0);
+		outputReport[1] = 1;
+		outputReport[2] = 1;
+		await device.sendReport(outputReportId, outputReport);
+		console.log("output1 turn on");
+
+		await waitFor(1000);
+
+		// turn off
+		outputReport[2] = 0;
+		await device.sendReport(outputReportId, outputReport);
+		console.log("output1 turn off");
+	}
+};
+
+
 </script>
 </body></html>
 
