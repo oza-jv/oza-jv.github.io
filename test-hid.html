@@ -9,10 +9,15 @@
 <body>
 <!-- ここに画面レイアウトをあらかじめ作っておく -->
 <div id="div1"></div>
+<!--
 <audio id="audio1"></audio>
 <video id="video1" width="320"></video>
 <img id="img1" width="160"></img>
-<button>ボタン</button>
+-->
+<button id="requestDeviceButton">request device</button>
+<button id="openButton">open device</button>
+<button id="beepButton">beep</button>
+<button id="ledButton">led</button>
 
 <!-- なでしこ3のエンジンを取り込み -->
 <script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
@@ -32,66 +37,119 @@
 </script>
 
 <script type="text/javascript">
-// 
-const filters = [
-  {
-    vendorId: 0x3289,
-    productId: 0x2001
-  }
-];
+let outputReportId = 0;
+//let outputReport = new Uint8Array([65]);
+let device;
 
-const main = async () => {
-    const [device] = await navigator.hid.requestDevice({ filters });
+if(!("hid" in navigator)) {
+    console.log('HID NG');
+} else {
+    console.log('HID OK');
+}
 
-    for (let collection of device.collections) {
-        // A HID collection includes usage, usage page, reports, and subcollections.
-        console.log(`Usage: ${collection.usage}`);
-        console.log(`Usage page: ${collection.usagePage}`);
-      
-        for (let inputReport of collection.inputReports) {
-          console.log(`Input report: ${inputReport.reportId}`);
-          // Loop through inputReport.items
-        }
-      
-        for (let outputReport of collection.outputReports) {
-          console.log(`Output report: ${outputReport.reportId}`);
-          // Loop through outputReport.items
-        }
-      
-        for (let featureReport of collection.featureReports) {
-          console.log(`Feature report: ${featureReport.reportId}`);
-          // Loop through featureReport.items
-        }
-      
-        // Loop through subcollections with collection.children
-    }
-    
-    device.addEventListener("inputreport", event => {
-        const { data, device, reportId } = event;
-      
-        console.log(data);
-        console.log(reportId);
-    });
+navigator.hid.getDevices().then(devices => {
+	if (devices.length == 0) {
+		// まだ接続されていないとき
+		console.log(`No HID devices selected. Press the "request device" button.`);
+		return;
+	}
 
-    await device.open();
-    const OutBuffer = new ArrayBuffer(64);
-	OutBuffer[0] = 0;
-	OutBuffer[1] = 'P';
-	OutBuffer[2] = 1;
-    await device.sendReport(0x00, new Uint8Array(OutBuffer));
+	// すでに接続されているとき
+	device = devices[0];
+	console.log(`User previously selected "${device.productName}" HID device.`);
+	console.log(`Now press "open device" button to receive input reports.`);
+});
 
-	console.log(device.collections);
-	
-	//await device.close();
+// 接続ボタンを押した時　デバイスを要求
+requestDeviceButton.onclick = async event => {
+	try {
+		const filters = [
+		  {
+		    // なでしこボードのHIDフィルタ
+		    vendorId: 0x3289,
+		    productId: 0x2001
+		  }
+		];
+		
+		[device] = await navigator.hid.requestDevice({ filters });
+		if (!device) return;
+		
+		// 接続できました
+		console.log(`User selected "${device.productName}" HID device.`);
+		console.log(`Now press "open device" button to receive input reports.`);
+	} catch {
+		console.log("error");
+	};
 };
 
-if("hid" in navigator) {
-    console.log('HID OK');
-    const btn = document.querySelector('button');
-    btn.addEventListener('click', main);
-} else {
-    console.log('HID NG');
+// デバイスを開く時
+openButton.onclick = async event => {
+	if (!device) return;
+
+	await device.open();
+	device.addEventListener("inputreport", handleInputReport);
+	console.log(`${device.productName} open: ${device.opened}`);
+};
+
+// 接続と切断に対するイベントリスナー登録
+navigator.hid.addEventListener('connect', ({device}) => {
+	console.log(`HID connected: ${device.productName}`);
+});
+
+navigator.hid.addEventListener('disconnect', ({device}) => {
+	console.log(`HID disconnected: ${device.productName}`);
+});
+
+function handleInputReport(e) {
+  console.log(e.device.productName + ": got input report " + e.reportId);
+  console.log(new Uint8Array(e.data.buffer));
+  //console.log(new TextDecoder().decode(e.data.buffer));
 }
+
+
+const waitFor = duration => new Promise(r => setTimeout(r, duration));
+
+// beepボタンを押した時
+beepButton.onclick = async event => {
+	if (!device) return;
+	const outputReport = new Uint8Array(64);
+
+	// beep
+	outputReport[0] = 'P'.charCodeAt(0);
+	outputReport[1] = 10;
+	await device.sendReport(outputReportId, outputReport);
+	console.log("beep on");
+
+	await waitFor(1000);
+
+	// beep
+	outputReport[0] = 'P'.charCodeAt(0);
+	outputReport[1] = 23;
+	await device.sendReport(outputReportId, outputReport);
+	console.log("beep off");
+
+};
+
+// ledボタンを押した時
+ledButton.onclick = async event => {
+	if (!device) return;
+	const outputReport = new Uint8Array(64);
+
+	// turn on
+	outputReport[0] = 'O'.charCodeAt(0);
+	outputReport[1] = 0;
+	outputReport[2] = 1;
+	await device.sendReport(outputReportId, outputReport);
+	console.log("led on");
+
+	await waitFor(1000);
+
+	// turn off
+	outputReport[2] = 0;
+	await device.sendReport(outputReportId, outputReport);
+	console.log("led off");
+
+};
 </script>
 </body></html>
 
