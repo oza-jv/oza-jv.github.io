@@ -2,18 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="origin-trial" content="Aub/6OTHZFpvguBQTsDcFO6xK5t8xENiohlvILkF7nvErPs1DJFU/wx1yRy/gaHjhay8iwqtZoyaERtxpOiS+AMAAABjeyJvcmlnaW4iOiJodHRwczovL296YS1qdi5naXRodWIuaW86NDQzIiwiZmVhdHVyZSI6IldlYkhJRCIsImV4cGlyeSI6MTYxNDEyNDc5OSwiaXNTdWJkb21haW4iOnRydWV9">
-  <title>なでしこ３</title>
+  <title>なでしこボード接続テスト</title>
 </head>
 
 <body>
 <!-- ここに画面レイアウトをあらかじめ作っておく -->
-<div id="div1"></div>
-<!--
-<audio id="audio1"></audio>
-<video id="video1" width="320"></video>
-<img id="img1" width="160"></img>
--->
+<h2>なでしこボード接続テスト 2021/5/3</h2>
 <button id="requestDeviceButton">request device</button>
 <button id="openButton">open device</button>
 <button id="closeButton">close device</button>
@@ -21,23 +15,11 @@
 <button id="ledButton">LEDオン</button>
 <button id="sensor1Button">センサ1測定</button>
 <button id="out1Button">出力1</button>
-
-<!-- なでしこ3のエンジンを取り込み -->
-<script type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.1.8&f=release/wnako3.js&run"></script>
-<!-- プラグインを取り込み -->
-<script type="text/javascript" src="https://oza-jv.github.io/plugin_media.js"></script>
-
-<!-- なでしこのプログラム -->
-<script type="なでしこ">
-// 初期設定 -- HTML内でなでしこを使うときは必ず実行する
-結果領域＝「#div1」。
-結果領域へDOM親要素設定。結果領域に「」をHTML設定。
-
-// ここから，なでしこのプログラムを書いていきます
-
-
-
-</script>
+<p>※下に表示されるログは，console.logと同じものです。
+ChromeブラウザならCtrl+Shift+Iを押してconsoleを表示 → 上部タブから「Console」を選ぶと，
+より詳細な情報が得られます。</p>
+<hr />
+<div id="div1"></div>
 
 <script type="text/javascript">
 let outputReportId = 0;
@@ -53,33 +35,39 @@ const filters = [
   }
 ];
 
+function print(str) {
+	const el = document.getElementById("div1");
+	el.innerText = el.innerText + "\n" + str;
+	console.log(str);
+}
+
 // HID APIを使えるか
 if(!("hid" in navigator)) {
-    console.log('HID NG');
+    print('HID NG');
 } else {
-    console.log('HID OK');
+    print('HID OK');
 }
 
 navigator.hid.getDevices().then(devices => {
 	if (devices.length == 0) {
 		// まだ接続されていないとき
-		console.log(`No HID devices selected. Press the "request device" button.`);
+		print(`No HID devices selected. Press the "request device" button.`);
 		return;
 	}
 
 	// すでに接続されているとき
 	device = devices[0];
-	console.log(`User previously selected "${device.productName}" HID device.`);
-	console.log(`Now press "open device" button to receive input reports.`);
+	print(`User previously selected "${device.productName}" HID device.`);
+	print(`Now press "open device" button to receive input reports.`);
 });
 
 // 接続と切断に対するイベントリスナー登録
 navigator.hid.addEventListener('connect', ({device}) => {
-	console.log(`HID connected: ${device.productName}`);
+	print(`HID connected: ${device.productName}`);
 });
 
 navigator.hid.addEventListener('disconnect', ({device}) => {
-	console.log(`HID disconnected: ${device.productName}`);
+	print(`HID disconnected: ${device.productName}`);
 });
 
 const waitFor = duration => new Promise(r => setTimeout(r, duration));
@@ -106,10 +94,10 @@ requestDeviceButton.onclick = async event => {
 		if (!device) return;
 		
 		// 接続できました
-		console.log(`User selected "${device.productName}" HID device.`);
-		console.log(`Now press "open device" button to receive input reports.`);
+		print(`User selected "${device.productName}" HID device.`);
+		print(`Now press "open device" button to receive input reports.`);
 	} catch {
-		console.log("error");
+		print("error");
 	};
 };
 
@@ -119,8 +107,8 @@ openButton.onclick = async event => {
 
 	await device.open();
 	device.addEventListener("inputreport", handleInputReport);
-	console.log(`${device.productName} opened: ${device.opened}`);
-	console.log( device );
+	print(`${device.productName} opened: ${device.opened}`);
+	print( device );
 };
 
 // デバイスを閉じる時
@@ -128,20 +116,20 @@ closeButton.onclick = async event => {
 	if (!device) return;
 
 	await device.close();
-	console.log(`${device.productName} opened: ${device.opened}`);
+	print(`${device.productName} opened: ${device.opened}`);
 };
 
 // ボード側から受信したときのイベント
 function handleInputReport(e) {
 	const { data, device, reportId } = e;
 	
-	//console.log(e.device.productName + ": got input report " + reportId);
-	//console.log(new Uint8Array(data.buffer));
+	//print(e.device.productName + ": got input report " + reportId);
+	//print(new Uint8Array(data.buffer));
 	
 	// 測定値
 	ADval = data.getUint8(2);
 	ADval = (ADval << 8) | data.getUint8(1);
-	console.log( ADval );
+	print( ADval );
 }
 
 function getRandomInt(max) {
@@ -158,7 +146,7 @@ beepButton.onclick = async event => {
 		outputReport[0] = 'P'.charCodeAt(0);
 		outputReport[1] = note;
 		await device.sendReport(outputReportId, outputReport);
-		console.log(`beep on  note:${note}`);
+		print(`beep on  note:${note}`);
 
 		await waitFor(500);
 
@@ -166,7 +154,7 @@ beepButton.onclick = async event => {
 		outputReport[0] = 'P'.charCodeAt(0);
 		outputReport[1] = 23;
 		await device.sendReport(outputReportId, outputReport);
-		console.log("beep off");
+		print("beep off");
 	}
 };
 
@@ -179,14 +167,14 @@ ledButton.onclick = async event => {
 		outputReport[1] = 0;
 		outputReport[2] = 1;
 		await device.sendReport(outputReportId, outputReport);
-		console.log("led on");
+		print("led on");
 
 		await waitFor(1000);
 
 		// turn off
 		outputReport[2] = 0;
 		await device.sendReport(outputReportId, outputReport);
-		console.log("led off");
+		print("led off");
 	}
 };
 
@@ -197,9 +185,9 @@ sensor1Button.onclick = async event => {
 		// turn on
 		outputReport[0] = 'A'.charCodeAt(0);
 		await device.sendReport(outputReportId, outputReport);
-		console.log("sensor1");
+		print("sensor1");
 		await waitFor(100);
-		console.log(`ADval: ${ADval}`);
+		print(`ADval: ${ADval}`);
 	}
 };
 
@@ -212,14 +200,14 @@ out1Button.onclick = async event => {
 		outputReport[1] = 1;
 		outputReport[2] = 1;
 		await device.sendReport(outputReportId, outputReport);
-		console.log("output1 turn on");
+		print("output1 turn on");
 
 		await waitFor(1000);
 
 		// turn off
 		outputReport[2] = 0;
 		await device.sendReport(outputReportId, outputReport);
-		console.log("output1 turn off");
+		print("output1 turn off");
 	}
 };
 
