@@ -258,12 +258,12 @@ const PluginNakoBoard = {
 					outputReport[0] = 'A'.charCodeAt(0);
 					await device.sendReport(outputReportId, outputReport);
 					await WaitForInputReport();		// イベント発生まで待つ
-					a = ADval;
-					console.log( `result: ${a}` );
-					return a;
+					console.log( `result: ${ADval}` );
 				})()
 			} catch(e) {
 				return e;
+			} finally {
+				return ADval;	// ※１回前の測定値が返される…。asyncの問題…。
 			}
 		}
 	}
