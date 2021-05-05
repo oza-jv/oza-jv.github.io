@@ -7,14 +7,16 @@
 
 <body>
 <!-- ここに画面レイアウトをあらかじめ作っておく -->
-<h2>なでしこボード接続テスト 2021/5/3</h2>
-<button id="requestDeviceButton">request device</button>
+<h2>なでしこボード接続テスト 2021/5/5</h2>
+<button id="requestDeviceButton">HID接続</button>
 <button id="openButton">open device</button>
 <button id="closeButton">close device</button>
 <button id="beepButton">beep</button>
 <button id="ledButton">LEDオン</button>
 <button id="sensor1Button">センサ1測定</button>
 <button id="out1Button">出力1</button>
+<p><div id="connected">未接続</div>
+<div id="opened">close</div></p>
 <p>※下に表示されるログは，console.logと同じものです。
 ChromeブラウザならCtrl+Shift+Iを押してconsoleを表示 → 上部タブから「Console」を選ぶと，
 より詳細な情報が得られます。</p>
@@ -41,33 +43,56 @@ function print(str) {
 	console.log(str);
 }
 
+function print_status() {
+	const el1 = document.getElementById("connected");
+	const el2 = document.getElementById("opened");
+
+	var s = "";
+	if(!device) {
+		s = "HID未接続";
+	} else {
+		s = "HID接続:" + device.productName;
+	}
+	el1.innerText = s;
+
+	s = "opened: "+ device.opened;
+	el2.innerText = s;
+}
+
 // HID APIを使えるか
 if(!("hid" in navigator)) {
-    print('HID NG');
+    print('このブラウザは，WebHIDを使えません。');
 } else {
-    print('HID OK');
+    print('このブラウザは，WebHIDを使えます。');
 }
 
 navigator.hid.getDevices().then(devices => {
 	if (devices.length == 0) {
 		// まだ接続されていないとき
-		print(`No HID devices selected. Press the "request device" button.`);
+		//print(`No HID devices selected. Press the "request device" button.`);
+		print(`HIDデバイスが接続されていません。「接続」ボタンを押してください。`);
 		return;
 	}
 
 	// すでに接続されているとき
 	device = devices[0];
-	print(`User previously selected "${device.productName}" HID device.`);
-	print(`Now press "open device" button to receive input reports.`);
+	//print(`User previously selected "${device.productName}" HID device.`);
+	//print(`Now press "open device" button to receive input reports.`);
+	print(`すでにHIDデバイス"${device.productName}"が接続されています。`);
+	print(`"open device" ボタンを押してください。`);
+	
+	print_status();
 });
 
 // 接続と切断に対するイベントリスナー登録
 navigator.hid.addEventListener('connect', ({device}) => {
-	print(`HID connected: ${device.productName}`);
+	print(`HID接続: ${device.productName}`);
+	print_status();
 });
 
 navigator.hid.addEventListener('disconnect', ({device}) => {
-	print(`HID disconnected: ${device.productName}`);
+	print(`HID切断: ${device.productName}`);
+	print_status();
 });
 
 const waitFor = duration => new Promise(r => setTimeout(r, duration));
@@ -83,7 +108,6 @@ function ChkHIDItem() {
 	} else {
 		USBconnected = 0;			// 接続したが未オープン
 	}
-	
 }
 
 /*----------------------------------------------------------*/
@@ -94,11 +118,14 @@ requestDeviceButton.onclick = async event => {
 		if (!device) return;
 		
 		// 接続できました
-		print(`User selected "${device.productName}" HID device.`);
-		print(`Now press "open device" button to receive input reports.`);
-	} catch {
-		print("error");
-	};
+		//print(`User selected "${device.productName}" HID device.`);
+		//print(`Now press "open device" button to receive input reports.`);
+		print(`"${device.productName}"が選ばれました。`);
+		print(`"open device" ボタンを押してください。`);
+	} catch(e) {
+		print("接続できませんでした。");
+	}
+	print_status();
 };
 
 // デバイスを開く時
@@ -107,31 +134,29 @@ openButton.onclick = async event => {
 
 	await device.open();
 	device.addEventListener("inputreport", handleInputReport);
-	print(`${device.productName} opened: ${device.opened}`);
-	print( device );
+	print(`${device.productName}を開きました。 device.opened=${device.opened}`);
+	console.log( device );
+	//print(`${device.productName} opened: ${device.opened}`);
+	//print( device );
+
+	print_status();
 };
 
 // デバイスを閉じる時
 closeButton.onclick = async event => {
 	if (!device) return;
-
-	await device.close();
-	print(`${device.productName} opened: ${device.opened}`);
+	
+	if( device.opened == true ) {
+		await device.close();
+		print(`${device.productName}を閉じました。 device.opened=${device.opened}`);
+		//print(`${device.productName} opened: ${device.opened}`);
+	}
+	
+	print_status();
 };
 
-// ボード側から受信したときのイベント
-function handleInputReport(e) {
-	const { data, device, reportId } = e;
-	
-	//print(e.device.productName + ": got input report " + reportId);
-	//print(new Uint8Array(data.buffer));
-	
-	// 測定値
-	ADval = data.getUint8(2);
-	ADval = (ADval << 8) | data.getUint8(1);
-	print( ADval );
-}
-
+/*----------------------------------------------------------*/
+// 乱数を発生する(0-maxの間の整数)
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -158,6 +183,7 @@ beepButton.onclick = async event => {
 	}
 };
 
+/*----------------------------------------------------------*/
 // ledボタンを押した時
 ledButton.onclick = async event => {
 	ChkHIDItem();
@@ -175,19 +201,6 @@ ledButton.onclick = async event => {
 		outputReport[2] = 0;
 		await device.sendReport(outputReportId, outputReport);
 		print("led off");
-	}
-};
-
-// センサ１ボタンを押した時
-sensor1Button.onclick = async event => {
-	ChkHIDItem();
-	if( USBconnected == 1 ) {
-		// turn on
-		outputReport[0] = 'A'.charCodeAt(0);
-		await device.sendReport(outputReportId, outputReport);
-		print("sensor1");
-		await waitFor(100);
-		print(`ADval: ${ADval}`);
 	}
 };
 
@@ -211,6 +224,37 @@ out1Button.onclick = async event => {
 	}
 };
 
+
+/*----------------------------------------------------------*/
+// ボード側から受信したときのイベント
+function handleInputReport(e) {
+	const { data, device, reportId } = e;
+	
+	print(e.device.productName + "からinputreportを受信 reportId=" + reportId);
+	//print(e.device.productName + ": got input report " + reportId);
+	//print(new Uint8Array(data.buffer));
+	
+	// 測定値
+	ADval = data.getUint8(2);
+	ADval = (ADval << 8) | data.getUint8(1);
+	print("センサ1:" + ADval );
+}
+
+// ボードから受信するイベントが発生するまで待つ関数
+const WaitForInputReport = () => new Promise(resolve => device.addEventListener("inputreport", resolve));
+
+// センサ１ボタンを押した時
+sensor1Button.onclick = async event => {
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		// turn on
+		outputReport[0] = 'A'.charCodeAt(0);
+		await device.sendReport(outputReportId, outputReport);
+		print("sensor1");
+		await WaitForInputReport();		// イベント発生まで待つ
+		print(`ADval: ${ADval}`);
+	}
+};
 
 </script>
 </body></html>
