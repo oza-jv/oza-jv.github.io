@@ -21,7 +21,7 @@
 ChromeブラウザならCtrl+Shift+Iを押してconsoleを表示 → 上部タブから「Console」を選ぶと，
 より詳細な情報が得られます。</p>
 <hr />
-<div id="div1"></div>
+<div><textarea id="div1" cols="74" rows="20"></textarea></div>
 
 <script type="text/javascript">
 let outputReportId = 0;
@@ -37,9 +37,11 @@ const filters = [
   }
 ];
 
+/*----------------------------------------------------------*/
 function print(str) {
 	const el = document.getElementById("div1");
-	el.innerText = el.innerText + "\n" + str;
+	el.value = el.value + str + "\n";
+	el.scrollTop = el.scrollHeight;
 	console.log(str);
 }
 
@@ -59,6 +61,7 @@ function print_status() {
 	el2.innerText = s;
 }
 
+/*----------------------------------------------------------*/
 // HID APIを使えるか
 if(!("hid" in navigator)) {
     print('このブラウザは，WebHIDを使えません。');
