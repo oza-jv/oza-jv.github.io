@@ -350,7 +350,7 @@ function baseName(str) {
    return base;
 }
 
-// 「止める」ボタン…メディアの再生とタイマーを停止
+// 「止める」ボタン…メディアの再生を停止
 function nako3_break() {
 	const media = document.getElementsByClassName('media');
 	for (let i = 0; i < media.length; i++ ) {
@@ -411,14 +411,43 @@ function key_event() {
 		case 115:
 			nako3_savels(1);
 			break;
+
 		// F9キー 実行
 		case 120:
 			nako3_run();
 			break;
+
 		// F10キー 停止
 		case 121:
 			nako3_break();
 			break;
+
+		// F5キー LS読込
+		case 116:
+			nako3_loadls();
+			break;
+
+
+		// ctrl + alt + 9 実行
+		case 57:
+			if( event.ctrlKey && event.altKey )  nako3_run(); 
+			break;
+
+		// ctrl + alt + 0 停止
+		case 48:
+			if( event.ctrlKey && event.altKey ) nako3_break();
+			break;
+
+		// ctrl + alt + 4 LS保存
+		case 52:
+			if( event.ctrlKey && event.altKey ) nako3_savels(1);
+			break;
+
+		// ctrl + alt + 5 LS読込
+		case 53:
+			if( event.ctrlKey && event.altKey ) nako3_loadls();
+			break;
+
 		default:
 			break;
 	}
