@@ -7,11 +7,12 @@
 
 <body>
 <!-- ここに画面レイアウトをあらかじめ作っておく -->
-<h2>なでしこボード接続テスト 2021/5/5</h2>
+<h2>なでしこボード接続テスト v2 2021/5/15</h2>
 <button id="requestDeviceButton">HID接続</button>
 <button id="openButton">open device</button>
 <button id="closeButton">close device</button>
 <button id="beepButton">beep</button>
+<button id="cdeButton">ドレミ</button>
 <button id="ledButton">LEDオン</button>
 <button id="sensor1Button">センサ1測定</button>
 <button id="out1Button">出力1</button>
@@ -186,6 +187,30 @@ beepButton.onclick = async event => {
 	}
 };
 
+// ドレミボタンを押した時
+cdeButton.onclick = async event => {
+	ChkHIDItem();
+	if( USBconnected == 1 ) {
+		note = [0, 2, 4, 5, 7, 9, 11, 12]
+
+		for( var i = 0; i < note.length; i++ ) {
+			// beep
+			outputReport[0] = 'P'.charCodeAt(0);
+			outputReport[1] = note[i];
+			await device.sendReport(outputReportId, outputReport);
+			print(`beep on  note:${note[i]}`);
+
+			await waitFor(250);
+		}
+
+		// beep
+		outputReport[0] = 'P'.charCodeAt(0);
+		outputReport[1] = 23;
+		await device.sendReport(outputReportId, outputReport);
+		print("beep off");
+	}
+};
+
 /*----------------------------------------------------------*/
 // ledボタンを押した時
 ledButton.onclick = async event => {
@@ -201,6 +226,8 @@ ledButton.onclick = async event => {
 		await waitFor(1000);
 
 		// turn off
+		outputReport[0] = 'O'.charCodeAt(0);
+		outputReport[1] = 0;
 		outputReport[2] = 0;
 		await device.sendReport(outputReportId, outputReport);
 		print("led off");
@@ -221,6 +248,8 @@ out1Button.onclick = async event => {
 		await waitFor(1000);
 
 		// turn off
+		outputReport[0] = 'O'.charCodeAt(0);
+		outputReport[1] = 1;
 		outputReport[2] = 0;
 		await device.sendReport(outputReportId, outputReport);
 		print("output1 turn off");

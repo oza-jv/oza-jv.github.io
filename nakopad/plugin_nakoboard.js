@@ -45,6 +45,11 @@ navigator.hid.addEventListener('disconnect', ({device}) => {
 
 // ヘルパー関数
 const waitFor = (n) => new Promise(resolve => setTimeout(resolve, n));
+function sleep(msec) {
+	// 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+	var startMsec = new Date();
+	while (new Date() - startMsec < msec);
+}
 
 // センサ１測定用の関数
 const WaitForInputReport = () => new Promise(resolve => device.addEventListener("inputreport", resolve));
@@ -52,16 +57,17 @@ async function AD1input() {
 	// send
 	outputReport[0] = 'A'.charCodeAt(0);
 	await device.sendReport(outputReportId, outputReport);
-	await WaitForInputReport();		// イベント発生まで待つ
+	
+	// recieve
+	await WaitForInputReport()		// イベント発生まで待つ
 	console.log( `AD1input: ${ADval}` );
-	return Promise.resolve(ADval);
+	return ADval;
 }
 
 // ボード側から受信したときのイベント
 function handleInputReport(e) {
 	const { data, device, reportId } = e;
-	
-	if( device.productId !== filters.productId && reportId !== 0 ) return;
+	if( (device.productId !== filters.productId) || (reportId !== 0) ) return;
 	
 	//console.log(e.device.productName + ": got input report " + reportId);
 	//console.log(new Uint8Array(data.buffer));
@@ -70,6 +76,33 @@ function handleInputReport(e) {
 	ADval = data.getUint8(2);
 	ADval = (ADval << 8) | data.getUint8(1);
 	console.log(`sensor: ${ADval}` );
+}
+
+function setADval(v) {
+	ADval = v;
+}
+
+function chkReportID(device) {
+	for (let collection of device.collections) {
+	  // A HID collection includes usage, usage page, reports, and subcollections.
+	  console.log(`Usage: ${collection.usage}`);
+	  console.log(`Usage page: ${collection.usagePage}`);
+
+	  for (let inputReport of collection.inputReports) {
+	    console.log(`Input report: ${inputReport.reportId}`);
+	    // Loop through inputReport.items
+	  }
+
+	  for (let outputReport of collection.outputReports) {
+	    console.log(`Output report: ${outputReport.reportId}`);
+	    // Loop through outputReport.items
+	  }
+
+	  for (let featureReport of collection.featureReports) {
+	    console.log(`Feature report: ${featureReport.reportId}`);
+	    // Loop through featureReport.items
+	  }
+	}
 }
 
 /*---------------------------------------------*/
@@ -88,35 +121,36 @@ const PluginNakoBoard = {
 		};
 
 		// すでに開いているか
-		if( ChkHIDItem() == 1 ) return;
+		if( ChkHIDItem == 1 ) return;
 
 		// 接続を要求
 		(async () => {
 			await navigator.hid.getDevices()
-				.then( async (devices) => {
-					if( devices.length == 0 ) {
-						// 接続されていないときは，接続する
-						[device] = await navigator.hid.requestDevice({ filters });
-						if (!device) return;
+			.then( async (devices) => {
+				if( devices.length == 0 ) {
+					// 接続されていないときは，接続する
+					[device] = await navigator.hid.requestDevice({ filters });
+					if (!device) return;
 
-						// 接続できました
-						console.log(`User selected "${device.productName}" HID device.`);
-						
-					} else {
-						// すでに接続されているとき
-						device = devices[0];
-						console.log(`User previously selected "${device.productName}" HID device.`);
-					}
-				});
-
+					// 接続できました
+					console.log(`User selected "${device.productName}" HID device.`);
+				} else {
+					// すでに接続されているとき
+					device = devices[0];
+					console.log(`User previously selected "${device.productName}" HID device.`);
+				}
+			});
 			// デバイスをオープンする
-			await device.open();
+			await device.open()
+			.then( () => {
+				console.log(`${device.productName} opened: ${device.opened}`);
+				console.log( device );
+				chkReportID(device);
+			});
 
 			await device.addEventListener("inputreport", handleInputReport);
-			console.log(`${device.productName} opened: ${device.opened}`);
-			console.log( device );
 		})().catch( e => console.log(e) );
-	}
+    }
   },
   
   'ボード切断': {
@@ -128,28 +162,31 @@ const PluginNakoBoard = {
 
 		device.close();
 		console.log(`${device.productName} opened: ${device.opened}`);
+		isEXEC = 0;
     }
   },
   
   'ボード状態': {
     type: 'func',
     josi: [[]],
-    fn: function (text, sys) {
+    fn: function (sys) {
 		ChkHIDItem();
 		console.log(USBconnected);
 		return USBconnected;
     }
   },
 
-  '止': {
+  '秒待': {
     type: 'func',
-    josi: [['で']],
-    fn: async function (text, sys) {
-		var sec = parseInt(text) * 1000;
-		if( sec > 10000 ) sec = 10000;
-		if( sec < 0 ) sec = 0;
-		console.log(sec);
-		await waitFor(sec);
+    josi: [[]],
+    fn: function (text, sys) {
+		if( USBconnected == 1 ) {
+			var sec = Number( text );
+			if( isNaN(sec) ) return;
+			if( sec<0 ) return;
+			if( sec>10 ) sec=10;
+			sleep(sec*1000)
+		}
     }
   },
 
@@ -157,7 +194,7 @@ const PluginNakoBoard = {
   '発音': {
     type: 'func',
     josi: [[]],
-    fn: async function (text, sys) {
+    fn: function (text, sys) {
     	var note;
 
 		ChkHIDItem();
@@ -167,16 +204,18 @@ const PluginNakoBoard = {
 			// beep
 			outputReport[0] = 'P'.charCodeAt(0);
 			outputReport[1] = note;
-			await device.sendReport(outputReportId, outputReport);
+			device.sendReport(outputReportId, outputReport);
 			console.log(`beep on  note:${note}`);
 
-			await waitFor(500);
+			//await waitFor(500);
+			sleep(500);
 
 			// beep
 			outputReport[0] = 'P'.charCodeAt(0);
 			outputReport[1] = 23;
-			await device.sendReport(outputReportId, outputReport);
+			device.sendReport(outputReportId, outputReport);
 			console.log("beep off");
+			sleep(200);
 		}
 	}
   },
@@ -245,39 +284,41 @@ const PluginNakoBoard = {
 	}
   },
 
-  'センサ1': { type: 'const', value : 0 },
+  'センサ値': {type: 'var', value: 0 },
   'センサ1測定': {
     type: 'func',
-    josi: [[]],
+    josi: [],
+    pure: true,
     fn: function (sys) { 
     	ChkHIDItem();
 		if( USBconnected == 1 ) {
-			try {
-				( async () => {
-					// send
-					outputReport[0] = 'A'.charCodeAt(0);
-					await device.sendReport(outputReportId, outputReport);
-					await WaitForInputReport();		// イベント発生まで待つ
-					console.log( `result: ${ADval}` );
-				})()
-			} catch(e) {
-				return e;
-			} finally {
-				return ADval;	// ※１回前の測定値が返される…。asyncの問題…。
-			}
-		}
-	}
-  },
-
-  'センサ1値': {
-    type: 'func',
-    josi: [[]],
-    fn: function (sys) {
-    	ChkHIDItem();
-		if( USBconnected == 1 ) {
-			return ADval;
-		}
-	}
+			/*
+			AD1input();
+			waitFor(300)
+			.then(() => {
+				sys.__v0['センサ値'] = ADval;
+				//console.log( `result: ${result}` );
+				console.log( `センサ値: ${sys.__v0['センサ値']}` );
+				return ADval;
+			});
+			*/
+			
+			// send
+			outputReport[0] = 'A'.charCodeAt(0);
+			device.sendReport(outputReportId, outputReport);
+			
+			// recieve
+			WaitForInputReport()		// イベント発生まで待つ
+			.then( (resolve, reject) => {
+				console.log( `result: ${ADval}` );
+				resolve(ADval);
+			});
+			
+		} else {
+			return -2;
+		};
+	},
+	return_none: false
   }
 
 }
