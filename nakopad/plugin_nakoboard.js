@@ -315,8 +315,8 @@ const PluginNakoBoard = {
 				resolve(ADval);
 			});
 			*/
-			AD1input();
 			sleep(500);
+			AD1input();
 			console.log( `result: ${ADval}` );
 			return ADval;
 		} else {
