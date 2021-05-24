@@ -310,10 +310,13 @@ const PluginNakoBoard = {
 			
 			// recieve
 			WaitForInputReport()		// イベント発生まで待つ
-			.then( (resolve, reject) => {
+			/*.then( (resolve, reject) => {
 				console.log( `result: ${ADval}` );
 				resolve(ADval);
 			});
+			*/
+			sleep(500);
+			console.log( `result: ${ADval}` );
 			return ADval;
 		} else {
 			return -2;
