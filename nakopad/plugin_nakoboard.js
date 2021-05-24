@@ -309,7 +309,7 @@ const PluginNakoBoard = {
 			device.sendReport(outputReportId, outputReport);
 			
 			// recieve
-			WaitForInputReport()		// イベント発生まで待つ
+			//WaitForInputReport()		// イベント発生まで待つ
 			/*.then( (resolve, reject) => {
 				console.log( `result: ${ADval}` );
 				resolve(ADval);
