@@ -312,8 +312,8 @@ const PluginNakoBoard = {
 			.then( (resolve, reject) => {
 				console.log( `result: ${ADval}` );
 				resolve(ADval);
+				return ADval;
 			});
-			
 		} else {
 			return -2;
 		};
