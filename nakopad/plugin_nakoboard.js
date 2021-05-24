@@ -288,6 +288,7 @@ const PluginNakoBoard = {
   'センサ1測定': {
     type: 'func',
     josi: [],
+    return_none: true,
     pure: true,
     fn: function (sys) { 
     	ChkHIDItem();
